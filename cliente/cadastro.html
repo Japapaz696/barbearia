@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Barbado's Barbearia</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cliente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-body">
+    <div class="auth-container">
+        <div class="auth-box auth-box-large">
+            <div class="auth-header">
+                <h1><i class="fas fa-scissors"></i> BARBADO'S</h1>
+                <p>Crie sua conta e ganhe pontos!</p>
+            </div>
+            <div class="promo-banner">
+                <i class="fas fa-gift"></i> <strong>10% OFF</strong> no primeiro agendamento!
+            </div>
+            <form id="formCadastro" class="auth-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-user"></i> Nome completo</label>
+                        <input type="text" id="nomeCadastro" required placeholder="Seu nome">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-phone"></i> Telefone</label>
+                        <input type="tel" id="telefoneCadastro" required placeholder="(31) 99999-9999">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> E-mail</label>
+                    <input type="email" id="emailCadastro" required placeholder="seu@email.com">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Senha</label>
+                        <input type="password" id="senhaCadastro" required placeholder="Mínimo 6 caracteres" minlength="6">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Confirmar senha</label>
+                        <input type="password" id="confirmaSenha" required placeholder="Repita a senha">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Data de nascimento</label>
+                    <input type="date" id="nascimentoCadastro">
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="aceitaTermos" required>
+                    <label for="aceitaTermos">Aceito receber promoções e novidades</label>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </button>
+                <p class="auth-link">Já tem conta? <a href="login.html">Faça login</a></p>
+            </form>
+            <div class="auth-back">
+                <a href="../index.html"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
+            </div>
+        </div>
+    </div>
+    <script src="../js/cliente.js"></script>
+</body>
+</html>

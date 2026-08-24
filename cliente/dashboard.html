@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha Conta - Barbado's Barbearia</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/cliente.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="logo">
+                <h1><i class="fas fa-scissors"></i> BARBADO'S</h1>
+                <p>Minha Conta</p>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="#" onclick="logout()" class="btn-login"><i class="fas fa-sign-out-alt"></i> Sair</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="welcome-bar">
+                <h2 id="welcomeMsg">Olá, Cliente!</h2>
+                <p>Acompanhe seus agendamentos e pontos de fidelidade</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card stat-pontos">
+                    <i class="fas fa-star"></i>
+                    <div>
+                        <h3 id="pontosCliente">0</h3>
+                        <p>Pontos acumulados</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-visitas">
+                    <i class="fas fa-cut"></i>
+                    <div>
+                        <h3 id="visitasCliente">0</h3>
+                        <p>Visitas realizadas</p>
+                    </div>
+                </div>
+                <div class="stat-card stat-progresso">
+                    <i class="fas fa-gift"></i>
+                    <div>
+                        <h3 id="cortesRestantes">10</h3>
+                        <p>Cortes p/ brinde</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-label">
+                    <span>Programa Fidelidade</span>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p class="progress-text">A cada 10 cortes, você ganha 1 grátis! 🎁</p>
+            </div>
+
+            <section class="dashboard-section">
+                <div class="section-header">
+                    <h3><i class="fas fa-calendar-check"></i> Meus Agendamentos</h3>
+                    <a href="../index.html#agendamento" class="btn btn-primary">+ Novo Agendamento</a>
+                </div>
+                <div id="listaAgendamentos" class="agendamentos-lista">
+                    <p class="empty-state">Carregando...</p>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <h3><i class="fas fa-history"></i> Histórico de Visitas</h3>
+                <div id="historicoVisitas" class="historico-lista">
+                    <p class="empty-state">Carregando...</p>
+                </div>
+            </section>
+
+            <section class="dashboard-section">
+                <h3><i class="fas fa-user-edit"></i> Meus Dados</h3>
+                <form id="formAtualizar" class="form-atualizar">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome</label>
+                            <input type="text" id="editNome">
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="tel" id="editTelefone">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="editEmail">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </form>
+            </section>
+        </div>
+    </main>
+
+    <script src="../js/dashboard.js"></script>
+</body>
+</html>

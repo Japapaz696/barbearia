@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Admin - Barbado's Barbearia</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <button id="sidebarToggle" class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="fas fa-scissors"></i> BARBADO'S</h2>
+            <p>Painel Admin</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-link active" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i> <span>Dashboard</span>
+                <span class="badge" id="badgeNovos">0</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="agendamentos">
+                <i class="fas fa-calendar"></i> <span>Agendamentos</span>
+                <span class="badge" id="badgePendentes">0</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="clientes">
+                <i class="fas fa-users"></i> <span>Clientes</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="servicos">
+                <i class="fas fa-cut"></i> <span>Serviços</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="cupons">
+                <i class="fas fa-ticket-alt"></i> <span>Cupons</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="avaliacoes">
+                <i class="fas fa-star"></i> <span>Avaliações</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="financeiro">
+                <i class="fas fa-dollar-sign"></i> <span>Financeiro</span>
+            </a>
+            <a href="#" class="nav-link" data-tab="configuracoes">
+                <i class="fas fa-cog"></i> <span>Configurações</span>
+            </a>
+            <a href="../index.html" class="nav-link">
+                <i class="fas fa-arrow-left"></i> <span>Voltar ao Site</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-bar">
+            <div class="top-bar-left">
+                <h1 id="pageTitle">Dashboard</h1>
+                <small id="lastUpdate" style="color:#999; font-size:12px;"></small>
+            </div>
+            <div class="top-bar-right">
+                <button id="btnRefresh" class="btn-icon" title="Atualizar">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+                <div class="notificacao-admin" id="notificacaoAdmin">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-badge" id="notifBadge">0</span>
+                </div>
+                <div class="user-info">
+                    <span><i class="fas fa-user-circle"></i> Administrador</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Notificações Dropdown -->
+        <div class="notif-dropdown hidden" id="notifDropdown">
+            <h4>Notificações em Tempo Real</h4>
+            <div id="listaNotificacoes"></div>
+            <button class="btn-link" onclick="limparNotificacoes()">Limpar tudo</button>
+        </div>
+
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="tab-content active">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#d4edda; color:#28a745;">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div>
+                        <h3 id="metricAgendamentos">0</h3>
+                        <p>Agendamentos Hoje</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#fff3cd; color:#f39c12;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div>
+                        <h3 id="metricClientes">0</h3>
+                        <p>Total de Clientes</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#d1ecf1; color:#17a2b8;">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                    <div>
+                        <h3 id="metricFaturamento">R$ 0</h3>
+                        <p>Faturamento do Mês</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#f8d7da; color:#dc3545;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <h3 id="metricAvaliacao">4.9</h3>
+                        <p>Avaliação Média</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="card">
+                    <h3><i class="fas fa-clock"></i> Próximos Agendamentos</h3>
+                    <div id="proximosAgendamentos"></div>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-fire"></i> Clientes VIP</h3>
+                    <div id="clientesVIP"></div>
+                </div>
+            </div>
+
+            <div class="dashboard-row">
+                <div class="card">
+                    <h3><i class="fas fa-chart-bar"></i> Serviços Mais Pedidos</h3>
+                    <div id="topServicos"></div>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-calendar-day"></i> Agenda da Semana</h3>
+                    <div id="agendaSemana"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AGENDAMENTOS -->
+        <section id="agendamentos" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Todos os Agendamentos</h3>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="todos">Todos</button>
+                        <button class="filter-btn" data-filter="confirmado">Confirmados</button>
+                        <button class="filter-btn" data-filter="concluido">Concluídos</button>
+                        <button class="filter-btn" data-filter="cancelado">Cancelados</button>
+                    </div>
+                </div>
+                <div id="listaAgendamentosAdmin"></div>
+            </div>
+        </section>
+
+        <!-- CLIENTES -->
+        <section id="clientes" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Base de Clientes</h3>
+                    <input type="search" id="buscaCliente" placeholder="🔍 Buscar cliente..." class="search-input">
+                </div>
+                <div id="listaClientes"></div>
+            </div>
+        </section>
+
+        <!-- SERVIÇOS -->
+        <section id="servicos" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3>Gerenciar Serviços</h3>
+                    <button class="btn btn-primary" onclick="novoServico()">+ Novo Serviço</button>
+                </div>
+                <div id="listaServicos"></div>
+            </div>
+        </section>
+
+        <!-- CUPONS -->
+        <section id="cupons" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-ticket-alt"></i> Cupons de Desconto</h3>
+                    <button class="btn btn-primary" onclick="novoCupom()">+ Novo Cupom</button>
+                </div>
+                <div id="listaCupons"></div>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-chart-pie"></i> Uso de Cupons</h3>
+                <div id="estatisticasCupons"></div>
+            </div>
+        </section>
+
+        <!-- AVALIAÇÕES -->
+        <section id="avaliacoes" class="tab-content">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#d4edda; color:#28a745;">
+                        <i class="fas fa-smile"></i>
+                    </div>
+                    <div>
+                        <h3 id="totalAvaliacoes">0</h3>
+                        <p>Total de Avaliações</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#fff3cd; color:#f39c12;">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div>
+                        <h3 id="notaMedia">0.0</h3>
+                        <p>Nota Média</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <h3><i class="fas fa-comments"></i> Últimas Avaliações</h3>
+                <div id="listaAvaliacoes"></div>
+            </div>
+        </section>
+
+        <!-- FINANCEIRO -->
+        <section id="financeiro" class="tab-content">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#d4edda; color:#28a745;">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                    <div>
+                        <h3 id="receitaMes">R$ 0</h3>
+                        <p>Receitas</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#f8d7da; color:#dc3545;">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div>
+                        <h3>R$ 800</h3>
+                        <p>Despesas</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#d1ecf1; color:#17a2b8;">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div>
+                        <h3 id="lucroMes">R$ 0</h3>
+                        <p>Lucro Líquido</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon" style="background:#d1ecf1; color:#17a2b8;">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div>
+                        <h3 id="taxaOcupacao">0%</h3>
+                        <p>Taxa de Ocupação</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>Histórico de Receitas</h3>
+                <div id="historicoFinanceiro"></div>
+            </div>
+
+            <div class="card">
+                <h3>Exportar Relatório</h3>
+                <button class="btn btn-primary" onclick="exportarRelatorio()">
+                    <i class="fas fa-download"></i> Baixar CSV
+                </button>
+            </div>
+        </section>
+
+        <!-- CONFIGURAÇÕES -->
+        <section id="configuracoes" class="tab-content">
+            <div class="card">
+                <h3><i class="fas fa-store"></i> Informações da Barbearia</h3>
+                <form id="formConfig" class="form-grid">
+                    <div class="form-group">
+                        <label>Nome do Estabelecimento</label>
+                        <input type="text" id="configNome" value="Barbado's Barbearia">
+                    </div>
+                    <div class="form-group">
+                        <label>WhatsApp</label>
+                        <input type="text" id="configWhatsapp" value="553125160233">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail</label>
+                        <input type="email" id="configEmail" value="contato@barbadosbarbearia.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Endereço</label>
+                        <input type="text" id="configEndereco" value="Rua Sena Madureira, 516 - Belo Horizonte, MG">
+                    </div>
+                    <div class="form-group">
+                        <label>Abertura (hora)</label>
+                        <input type="number" id="configAbre" value="9">
+                    </div>
+                    <div class="form-group">
+                        <label>Fechamento Seg-Sex (hora)</label>
+                        <input type="number" id="configFecha" value="20">
+                    </div>
+                    <div class="form-group">
+                        <label>Sábado fecha às</label>
+                        <input type="number" id="configSabado" value="18">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Salvar Configurações</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-database"></i> Backup de Dados</h3>
+                <p>Faça backup ou restaure os dados do sistema.</p>
+                <button class="btn btn-primary" onclick="backupDados()">
+                    <i class="fas fa-download"></i> Fazer Backup
+                </button>
+                <button class="btn btn-secondary" onclick="document.getElementById('fileRestore').click()">
+                    <i class="fas fa-upload"></i> Restaurar Backup
+                </button>
+                <input type="file" id="fileRestore" accept=".json" style="display:none" onchange="restaurarDados(event)">
+                <button class="btn btn-danger" onclick="limparTudo()">
+                    <i class="fas fa-trash"></i> Limpar Todos os Dados
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>

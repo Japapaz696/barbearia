@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Barbado's Barbearia - Tradição, estilo e atitude em Belo Horizonte. Cortes masculinos, barba e tratamentos.">
+    <meta name="theme-color" content="#1a1a1a">
+    <title>Barbado's Barbearia - Elevando sua autoestima</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%82%EF%B8%8F%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <nav class="nav-container">
+            <div class="logo">BARBADO'S <span>BARBEARIA</span></div>
+            <ul class="nav-menu">
+                <li><a href="#inicio">Início</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#orcamento">Orçamento</a></li>
+                <li><a href="#agendamento">Agendar</a></li>
+                <li><a href="#avaliacoes">Avaliações</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contato">Contato</a></li>
+                <li><a href="cliente/login.html">Área do Cliente</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button id="darkModeToggle" title="Alternar tema"><i class="fas fa-moon"></i></button>
+                <button class="hamburger"><i class="fas fa-bars"></i></button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section id="inicio" class="hero">
+        <h1>ELEVANDO SUA AUTOESTIMA</h1>
+        <p>Tradição, estilo e atitude. Cortes clássicos e modernos em um ambiente onde você é a estrela.</p>
+        <div class="hero-buttons">
+            <a href="#agendamento" class="btn btn-primary">Agendar Horário</a>
+            <a href="#orcamento" class="btn btn-secondary">Ver Orçamento</a>
+            <a href="https://wa.me/553125160233" class="btn btn-secondary" target="_blank">
+                <i class="fab fa-whatsapp"></i> WhatsApp
+            </a>
+        </div>
+    </section>
+
+    <!-- SERVIÇOS -->
+    <section id="servicos">
+        <h2 class="section-title">Nossos Serviços</h2>
+        <p class="section-subtitle">Qualidade premium para o homem que valoriza estilo</p>
+
+        <div class="servicos-grid">
+            <div class="servico-card">
+                <div class="servico-icon"><i class="fas fa-cut"></i></div>
+                <h3>Corte Masculino</h3>
+                <div class="preco">R$ 45,00</div>
+                <p>Cortes modernos e clássicos</p>
+            </div>
+            <div class="servico-card">
+                <div class="servico-icon"><i class="fas fa-scissors"></i></div>
+                <h3>Barba</h3>
+                <div class="preco">R$ 35,00</div>
+                <p>Toalha quente e produtos premium</p>
+            </div>
+            <div class="servico-card">
+                <div class="servico-icon"><i class="fas fa-magic"></i></div>
+                <h3>Corte + Barba</h3>
+                <div class="preco">R$ 70,00</div>
+                <p>Combo completo</p>
+            </div>
+            <div class="servico-card">
+                <div class="servico-icon"><i class="fas fa-palette"></i></div>
+                <h3>Pigmentação</h3>
+                <div class="preco">R$ 80,00</h3>
+                <p>Pigmentação de barba</p>
+            </div>
+            <div class="servico-card">
+                <div class="servico-icon"><i class="fas fa-spa"></i></div>
+                <h3>Hidratação</h3>
+                <div class="preco">R$ 60,00</div>
+                <p>Hidratação capilar</p>
+            </div>
+            <div class="servico-card">
+                <div class="servico-icon"><i class="fas fa-crown"></i></div>
+                <h3>Dia do Noivo</h3>
+                <div class="preco">R$ 200,00</div>
+                <p>Pacote completo para noivos</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ORÇAMENTO -->
+    <section id="orcamento">
+        <h2 class="section-title">Orçamento Online</h2>
+        <p class="section-subtitle">Selecione os serviços e veja o preço na hora. Quanto mais serviços, maior o desconto!</p>
+
+        <div class="orcamento-section">
+            <h3>Escolha os serviços desejados:</h3>
+            <div class="checkbox-grid">
+                <label class="checkbox-item">
+                    <input type="checkbox" value="45" data-nome="Corte Masculino">
+                    <span>Corte Masculino</span>
+                    <span class="preco-item">R$ 45</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="35" data-nome="Barba">
+                    <span>Barba</span>
+                    <span class="preco-item">R$ 35</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="80" data-nome="Pigmentação">
+                    <span>Pigmentação</span>
+                    <span class="preco-item">R$ 80</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="60" data-nome="Hidratação">
+                    <span>Hidratação</span>
+                    <span class="preco-item">R$ 60</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="30" data-nome="Sobrancelha">
+                    <span>Sobrancelha</span>
+                    <span class="preco-item">R$ 30</span>
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" value="25" data-nome="Pézinho">
+                    <span>Pézinho</span>
+                    <span class="preco-item">R$ 25</span>
+                </label>
+            </div>
+
+            <div class="cupom-input-group">
+                <input type="text" id="cupomInput" placeholder="🎟️ Tem um cupom? Digite aqui">
+            </div>
+
+            <div class="resultado-orcamento">
+                <h3><i class="fas fa-receipt"></i> Resumo do Orçamento</h3>
+                <div id="lista-selecionados" class="vazio">Nenhum serviço selecionado</div>
+                <div class="linha-resultado">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">R$ 0,00</span>
+                </div>
+                <div class="linha-resultado" id="linha-desconto" style="display:none;">
+                    <span>Desconto:</span>
+                    <span id="desconto" style="color:#28a745;">-R$ 0,00</span>
+                </div>
+                <div class="linha-resultado total">
+                    <span>TOTAL:</span>
+                    <span id="total-final">R$ 0,00</span>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="agendarComCombo()" style="margin-top:20px;">
+                    <i class="far fa-calendar-check"></i> Agendar com este combo
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENDAMENTO -->
+    <section id="agendamento">
+        <h2 class="section-title">Agende seu Horário</h2>
+        <p class="section-subtitle">Escolha o melhor dia e horário para você</p>
+
+        <form id="formAgendamento" class="agendamento-form">
+            <div class="form-group">
+                <label for="nomeCliente">Nome Completo *</label>
+                <input type="text" id="nomeCliente" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="telefone">Telefone/WhatsApp *</label>
+                <input type="tel" id="telefone" class="form-input" placeholder="(31) 99999-9999" required>
+            </div>
+            <div class="form-group">
+                <label for="dataAgendamento">Data *</label>
+                <input type="date" id="dataAgendamento" class="form-input" required>
+            </div>
+            <div class="form-group">
+                <label for="horarioAgendamento">Horário *</label>
+                <select id="horarioAgendamento" class="form-select" required>
+                    <option value="">Selecione primeiro a data</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="barbeiro">Barbeiro</label>
+                <select id="barbeiro" class="form-select">
+                    <option value="Qualquer um">Qualquer um disponível</option>
+                    <option value="João">João</option>
+                    <option value="Marcos">Marcos</option>
+                    <option value="Rafael">Rafael</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="servicosAgendamento">Serviço</label>
+                <input type="text" id="servicosAgendamento" class="form-input" placeholder="Ex: Corte + Barba">
+            </div>
+            <div class="form-group full-width">
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" class="form-textarea" placeholder="Algo que precisamos saber?"></textarea>
+            </div>
+            <div class="form-group full-width">
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="far fa-calendar-check"></i> Confirmar Agendamento
+                </button>
+                <p style="text-align:center; margin-top:15px; color:var(--text-light); font-size:14px;">
+                    📱 Você receberá confirmação via WhatsApp<br>
+                    ⭐ Após o serviço, avalie e ganhe pontos!
+                </p>
+            </div>
+        </form>
+    </section>
+
+    <!-- GALERIA -->
+    <section id="galeria">
+        <h2 class="section-title">Nosso Trabalho</h2>
+        <p class="section-subtitle">Veja alguns dos nossos cortes e estilo</p>
+
+        <div class="galeria-grid">
+            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600')" data-label="Corte Clássico"></div>
+            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600')" data-label="Barba"></div>
+            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600')" data-label="Degradê"></div>
+            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600')" data-label="Corte Moderno"></div>
+            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600')" data-label="Estilo"></div>
+            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600')" data-label="Atitude"></div>
+        </div>
+    </section>
+
+    <!-- AVALIAÇÕES -->
+    <section id="avaliacoes">
+        <h2 class="section-title">O que dizem nossos clientes</h2>
+        <p class="section-subtitle">⭐⭐⭐⭐⭐ Mais de 500 clientes satisfeitos</p>
+
+        <div class="depoimentos-grid" id="depoimentosDinamicos">
+            <div class="depoimento">
+                <div class="estrelas">★★★★★</div>
+                <p>"Melhor barbearia de BH! Atendimento impecável e ambiente top. Sempre saio me sentindo um novo."</p>
+                <strong>- Carlos M.</strong>
+            </div>
+            <div class="depoimento">
+                <div class="estrelas">★★★★★</div>
+                <p>"Profissionais excelentes. O João é fera no degradê. Recomendo demais!"</p>
+                <strong>- Pedro S.</strong>
+            </div>
+            <div class="depoimento">
+                <div class="estrelas">★★★★★</div>
+                <p>"Fidelidade total. Já vou lá há anos. Preço justo e qualidade premium."</p>
+                <strong>- Ricardo L.</strong>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROGRAMA FIDELIDADE + INDIQUE E GANHE -->
+    <section id="beneficios" style="background: var(--light-gray); max-width: 100%; padding: 80px 20px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title">Vantagens Exclusivas</h2>
+            <p class="section-subtitle">Cadastre-se e aproveite todos os benefícios</p>
+
+            <div class="servicos-grid">
+                <div class="servico-card">
+                    <div class="servico-icon">🎁</div>
+                    <h3>Programa Fidelidade</h3>
+                    <p style="margin: 15px 0;">A cada <strong>10 cortes</strong> você ganha <strong>1 grátis</strong>!</p>
+                    <small style="color: var(--text-light);">+10 pontos por visita</small>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">👥</div>
+                    <h3>Indique e Ganhe</h3>
+                    <p style="margin: 15px 0;">Indique amigos e ganhe <strong>50 pontos</strong> por indicação convertida!</p>
+                    <small style="color: var(--text-light);">Sem limite de indicações</small>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">🎟️</div>
+                    <h3>Cupons</h3>
+                    <p style="margin: 15px 0;">Use códigos promocionais para ganhar descontos!</p>
+                    <small style="color: var(--text-light);">Tente: <strong style="color: var(--primary);">BEMVINDO10</strong></small>
+                </div>
+                <div class="servico-card">
+                    <div class="servico-icon">📱</div>
+                    <h3>App Mobile</h3>
+                    <p style="margin: 15px 0;">Instale nosso app e tenha acesso rápido na tela do celular!</p>
+                    <small style="color: var(--text-light);">Disponível em breve</small>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="cliente/cadastro.html" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Cadastre-se Gratuitamente
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+        <h2 class="section-title">Perguntas Frequentes</h2>
+        <p class="section-subtitle">Tire suas dúvidas</p>
+
+        <div style="max-width: 800px; margin: 0 auto;">
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Preciso agendar com antecedência?</summary>
+                <p>Recomendamos agendar com pelo menos 1 dia de antecedência, mas também aceitamos clientes sem agendamento conforme disponibilidade.</p>
+            </details>
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Quais formas de pagamento?</summary>
+                <p>Aceitamos dinheiro, PIX, cartão de débito e crédito (até 3x sem juros).</p>
+            </details>
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Vocês têm estacionamento?</summary>
+                <p>Sim! Estacionamento gratuito para clientes em frente ao estabelecimento.</p>
+            </details>
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Atendem em horário de almoço?</summary>
+                <p>Sim, funcionamos sem fechar para almoço das 9h às 20h (segunda a sexta) e das 9h às 18h (sábado).</p>
+            </details>
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Como funciona o programa de fidelidade?</summary>
+                <p>A cada visita você ganha 10 pontos. Ao completar 100 pontos (10 cortes), você ganha 1 serviço grátis à sua escolha!</p>
+            </details>
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Posso cancelar meu agendamento?</summary>
+                <p>Sim! Pedimos apenas que cancele com pelo menos 2 horas de antecedência para liberar o horário para outros clientes.</p>
+            </details>
+            <details class="faq-item">
+                <summary><i class="fas fa-question-circle"></i> Vocês fazem Dia do Noivo?</summary>
+                <p>Sim! Temos um pacote especial completo de Dia do Noivo por R$ 200 com direito a corte, barba, hidratação e brindes. Agende com antecedência!</p>
+            </details>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="politica-privacidade.html" style="color: var(--primary);">
+                    <i class="fas fa-shield-alt"></i> Política de Privacidade (LGPD)
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTATO -->
+    <section id="contato">
+        <h2 class="section-title">Onde Estamos</h2>
+        <p class="section-subtitle">Venha nos visitar!</p>
+
+        <div class="contato-grid">
+            <div class="contato-info">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>Endereço</strong>
+                        Rua Sena Madureira, 516<br>
+                        Belo Horizonte, MG - 31340-000
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <strong>Telefone</strong>
+                        <a href="tel:+553125160233">(31) 2516-0233</a>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fab fa-whatsapp"></i>
+                    <div>
+                        <strong>WhatsApp</strong>
+                        <a href="https://wa.me/553125160233" target="_blank">(31) 2516-0233</a>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fab fa-instagram"></i>
+                    <div>
+                        <strong>Instagram</strong>
+                        <a href="https://instagram.com/barbadosbarbershop1.0" target="_blank">@barbadosbarbershop1.0</a>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="far fa-clock"></i>
+                    <div>
+                        <strong>Horário</strong>
+                        Seg-Sex: 9h às 20h<br>
+                        Sábado: 9h às 18h<br>
+                        Domingo: Fechado
+                    </div>
+                </div>
+            </div>
+
+            <div class="mapa">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3750.8234567890!2d-43.945!3d-19.857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDUxJzI0LjIiUyA0M8KwNTYnNDIuMCJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>💈 BARBADO'S</h3>
+                <p>Tradição, estilo e atitude em cada corte.</p>
+                <div class="social-icons">
+                    <a href="https://instagram.com/barbadosbarbershop1.0" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://wa.me/553125160233" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Links Rápidos</h3>
+                <a href="#servicos">Serviços</a>
+                <a href="#orcamento">Orçamento</a>
+                <a href="#agendamento">Agendar</a>
+                <a href="cliente/login.html">Área do Cliente</a>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Rua Sena Madureira, 516</p>
+                <p><i class="fas fa-phone"></i> (31) 2516-0233</p>
+                <p><i class="far fa-clock"></i> Seg-Sex 9h-20h | Sáb 9h-18h</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Barbado's Barbearia. Todos os direitos reservados.</p>
+            <p style="margin-top: 8px;">CNPJ: XX.XXX.XXX/0001-XX | Desenvolvido por <strong>Lucas</strong></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
