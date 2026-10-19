@@ -21,8 +21,11 @@ jobs:
         with:
           node-version: 20
 
+      # Sem argumentos: o proprio runner do Node descobre os arquivos de teste
+      # (padrao **/*.test.mjs). Um glob entre aspas funciona no Windows mas
+      # quebra no Linux, onde o runner recebe a string literal.
       - name: Rodar os testes
-        run: node --test "tests/**/*.test.mjs"
+        run: node --test
 
       - name: Conferir que os caminhos do Service Worker existem
         # O cache offline falhava porque cinco entradas apontavam para
