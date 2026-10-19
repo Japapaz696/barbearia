@@ -1,24 +1,29 @@
 // === SERVICE WORKER - BARBADO'S BARBEARIA PWA ===
 // Versão do cache - altere para forçar atualização
-const CACHE_NAME = 'barbados-v3';
-const STATIC_CACHE = 'barbados-static-v3';
-const DYNAMIC_CACHE = 'barbados-dynamic-v3';
+const CACHE_NAME = 'barbados-v4';
+const STATIC_CACHE = 'barbados-static-v4';
+const DYNAMIC_CACHE = 'barbados-dynamic-v4';
 
 // Arquivos para cache offline
+// Os caminhos precisam bater com a estrutura real da pasta. Antes, cinco
+// entradas apontavam para /cliente/js/... e /admin/js/..., que nao existem:
+// como cache.addAll() falha inteiro se UMA URL falhar, o Service Worker nao
+// instalava e o modo offline nunca funcionava.
 const STATIC_ASSETS = [
     '/index.html',
     '/css/style.css',
+    '/css/cliente.css',
+    '/css/admin.css',
     '/js/main.js',
+    '/js/cliente.js',
+    '/js/senha.js',
+    '/js/dashboard.js',
+    '/js/admin.js',
     '/manifest.json',
     '/cliente/login.html',
     '/cliente/cadastro.html',
     '/cliente/dashboard.html',
-    '/cliente/css/cliente.css',
-    '/cliente/js/cliente.js',
-    '/cliente/js/dashboard.js',
     '/admin/index.html',
-    '/admin/css/admin.css',
-    '/admin/js/admin.js',
     '/politica-privacidade.html'
 ];
 
@@ -29,7 +34,11 @@ self.addEventListener('install', (event) => {
         caches.open(STATIC_CACHE)
             .then((cache) => {
                 console.log('[SW] Cacheando assets estáticos');
-                return cache.addAll(STATIC_ASSETS);
+                // Um por um, para que um único arquivo indisponível não
+                // derrube a instalação inteira do Service Worker.
+                return Promise.allSettled(
+                    STATIC_ASSETS.map((url) => cache.add(url))
+                );
             })
             .then(() => self.skipWaiting())
     );

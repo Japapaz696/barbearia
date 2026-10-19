@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: Testes do tratamento de senha
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fazer checkout do repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Sem argumentos: o proprio runner do Node descobre os arquivos de teste
+      # (padrao **/*.test.mjs). Um glob entre aspas funciona no Windows mas
+      # quebra no Linux, onde o runner recebe a string literal.
+      - name: Rodar os testes
+        run: node --test
+
+      - name: Conferir que os caminhos do Service Worker existem
+        # O cache offline falhava porque cinco entradas apontavam para
+        # caminhos inexistentes. Esta checagem evita que isso volte.
+        run: |
+          node -e "
+            const fs = require('fs');
+            const sw = fs.readFileSync('service-worker.js', 'utf8');
+            const bloco = sw.match(/const STATIC_ASSETS = \[([\s\S]*?)\]/);
+            if (!bloco) { console.error('STATIC_ASSETS nao encontrado'); process.exit(1); }
+            const urls = [...bloco[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
+            const faltando = urls.filter(u => !fs.existsSync('.' + u));
+            if (faltando.length) {
+              console.error('Caminhos do Service Worker que nao existem:');
+              faltando.forEach(u => console.error('  - ' + u));
+              process.exit(1);
+            }
+            console.log('ok: ' + urls.length + ' caminhos conferidos');
+          "

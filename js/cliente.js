@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // === LOGIN ===
 const formLogin = document.getElementById('formLogin');
 if (formLogin) {
-    formLogin.addEventListener('submit', (e) => {
+    formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
         const telefone = document.getElementById('telefoneLogin').value.replace(/\D/g, '');
         const senha = document.getElementById('senhaLogin').value;
@@ -22,9 +22,24 @@ if (formLogin) {
         }
 
         const clientes = JSON.parse(localStorage.getItem('clientesConta') || '[]');
-        const cliente = clientes.find(c => c.telefone === telefone && c.senha === senha);
+        const cliente = clientes.find(c => c.telefone === telefone);
 
         if (cliente) {
+            const { confere, formato } = await hashSenha.verificarSenha(senha, cliente.senha);
+
+            if (!confere) {
+                mostrarNotificacao('Telefone ou senha incorretos!', '#dc3545');
+                return;
+            }
+
+            // Conta antiga, com senha em texto puro: aproveita o login e
+            // reescreve o registro com o derivador, para nao guardar mais a
+            // senha original.
+            if (formato === 'texto-puro') {
+                cliente.senha = await hashSenha.gerarHashSenha(senha);
+                localStorage.setItem('clientesConta', JSON.stringify(clientes));
+            }
+
             // Remove senha do objeto salvo na sessão
             const { senha: _, ...clienteSeguro } = cliente;
             sessionStorage.setItem('clienteLogado', JSON.stringify(clienteSeguro));
@@ -39,7 +54,7 @@ if (formLogin) {
 // === CADASTRO ===
 const formCadastro = document.getElementById('formCadastro');
 if (formCadastro) {
-    formCadastro.addEventListener('submit', (e) => {
+    formCadastro.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const nome = document.getElementById('nomeCadastro').value.trim();
@@ -87,7 +102,7 @@ if (formCadastro) {
             nome,
             telefone,
             email,
-            senha,
+            senha: await hashSenha.gerarHashSenha(senha),
             nascimento,
             pontos: 20, // Bônus de boas-vindas
             visitas: 0,

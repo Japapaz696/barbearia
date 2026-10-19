@@ -1,0 +1,34 @@
+# Dependências e artefatos de build
+node_modules/
+dist/
+build/
+coverage/
+*.log
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Variáveis de ambiente — nunca versionar segredos
+.env
+.env.*
+!.env.example
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Editores e ferramentas locais
+.idea/
+.vscode/
+*.local
+
+# Capturas de tela e artefatos gerados na máquina local
+screenshot-*.png
+*.local.png
+.playwright-mcp/
+.visual-audit/
+
+# Cache do Service Worker / PWA gerado em tempo de execução
+sw-cache/
+workbox-*/
