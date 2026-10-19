@@ -113,6 +113,40 @@ php -S localhost:8000
 ## 🔐 Login Admin
 O painel admin não tem login fixo (para o protótipo). Em produção, adicione autenticação JWT/session.
 
+## 🔐 Senha do cliente
+
+A senha **nunca é gravada em texto puro**. O `localStorage` guarda um derivador
+PBKDF2-SHA256 com sal aleatório, no formato `pbkdf2$<sal>$<hash>`, e a
+comparação no login é feita sobre o derivador.
+
+- **Senha nova:** o derivador é gerado no cadastro (`js/senha.js`).
+- **Conta antiga:** quem tinha a senha em texto puro continua entrando — o
+  login reconhece o formato antigo e reescreve o registro com o derivador
+  assim que o acesso é confirmado.
+- **Sessão:** o objeto salvo em `sessionStorage` não contém a senha.
+
+Isso continua sendo um protótipo sem backend: a verificação acontece no
+navegador, então quem controla o navegador controla a comparação. O ganho real
+é não deixar a senha original em disco. A porta de entrada de verdade de uma
+conta de cliente seria o servidor, com a senha verificada do lado de lá e a
+sessão mantida por cookie `HttpOnly`.
+
+Cobertura: `node --test tests/senha.test.mjs` → **10/10** (o derivador não
+contém a senha, o sal muda a cada conta, a senha errada é recusada, um valor
+adulterado não passa, um valor malformado não causa exceção e a conta antiga é
+migrada).
+
+## 🐛 Service Worker
+
+O cache offline lista os 15 arquivos estáticos do projeto. Antes, cinco
+entradas apontavam para caminhos inexistentes (`/cliente/js/...`,
+`/admin/js/...`) e, como `cache.addAll()` falha inteiro se **uma** URL falhar,
+o Service Worker não instalava — o modo offline nunca funcionou.
+
+Agora os caminhos batem com a estrutura real, o `js/senha.js` entrou no cache e
+a instalação usa `Promise.allSettled`, para que um arquivo indisponível não
+derrube o resto.
+
 ## 📦 Estrutura de Arquivos
 ```
 barbearia/
@@ -128,13 +162,16 @@ barbearia/
 │   ├── main.js                # Site principal (agendamento, orçamento, PWA, chat)
 │   ├── admin.js               # Painel admin completo + notificações realtime
 │   ├── cliente.js             # Auth (login/cadastro/logout)
+│   ├── senha.js               # Derivador PBKDF2 da senha do cliente
 │   └── dashboard.js           # Dashboard cliente (pontos, agendamentos, indique)
 ├── cliente/
 │   ├── login.html
 │   ├── cadastro.html
 │   └── dashboard.html
-└── admin/
-    └── index.html
+├── admin/
+│   └── index.html
+├── tests/
+│   └── senha.test.mjs         # Testes do tratamento de senha
 ```
 
 ## 💾 Persistência de Dados (localStorage Keys)
@@ -142,7 +179,7 @@ barbearia/
 | Key | Descrição |
 |---|---|
 | `agendamentos` | Array de todos os agendamentos |
-| `clientesConta` | Clientes cadastrados (inclui senha - só protótipo!) |
+| `clientesConta` | Clientes cadastrados (a senha fica como derivador PBKDF2, nunca em texto puro) |
 | `servicos` | Catálogo de serviços editável |
 | `cupons` | Cupons de desconto |
 | `avaliacoes` | Avaliações dos clientes |
