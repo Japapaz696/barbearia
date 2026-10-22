@@ -7,16 +7,24 @@
     <meta name="theme-color" content="#1a1a1a">
     <title>Barbado's Barbearia - Elevando sua autoestima</title>
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9C%82%EF%B8%8F%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a1a1a'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='58'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <!-- Aviso de demonstração: o site é um protótipo estático. -->
+    <div class="demo-banner" role="note">
+        <i class="fas fa-flask" aria-hidden="true"></i>
+        <span><strong>Demonstração:</strong> este site é um protótipo. Agendamentos ficam salvos só neste navegador e nada é enviado automaticamente.</span>
+    </div>
+
     <!-- HEADER -->
     <header>
-        <nav class="nav-container">
-            <div class="logo">BARBADO'S <span>BARBEARIA</span></div>
-            <ul class="nav-menu">
+        <nav class="nav-container" aria-label="Navegação principal">
+            <a class="logo" href="#inicio">BARBADO'S <span>BARBEARIA</span></a>
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="#inicio">Início</a></li>
                 <li><a href="#servicos">Serviços</a></li>
                 <li><a href="#orcamento">Orçamento</a></li>
@@ -27,21 +35,22 @@
                 <li><a href="cliente/login.html">Área do Cliente</a></li>
             </ul>
             <div class="nav-actions">
-                <button id="darkModeToggle" title="Alternar tema"><i class="fas fa-moon"></i></button>
-                <button class="hamburger"><i class="fas fa-bars"></i></button>
+                <button id="darkModeToggle" type="button" title="Alternar tema" aria-label="Ativar modo escuro" aria-pressed="false"><i class="fas fa-moon" aria-hidden="true"></i></button>
+                <button class="hamburger" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMenu"><i class="fas fa-bars" aria-hidden="true"></i></button>
             </div>
         </nav>
     </header>
 
     <!-- HERO -->
+    <main id="conteudo">
     <section id="inicio" class="hero">
         <h1>ELEVANDO SUA AUTOESTIMA</h1>
         <p>Tradição, estilo e atitude. Cortes clássicos e modernos em um ambiente onde você é a estrela.</p>
         <div class="hero-buttons">
             <a href="#agendamento" class="btn btn-primary">Agendar Horário</a>
             <a href="#orcamento" class="btn btn-secondary">Ver Orçamento</a>
-            <a href="https://wa.me/553125160233" class="btn btn-secondary" target="_blank">
-                <i class="fab fa-whatsapp"></i> WhatsApp
+            <a href="https://wa.me/553125160233" class="btn btn-secondary" target="_blank" rel="noopener">
+                <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
             </a>
         </div>
     </section>
@@ -52,42 +61,42 @@
         <p class="section-subtitle">Qualidade premium para o homem que valoriza estilo</p>
 
         <div class="servicos-grid">
-            <div class="servico-card">
-                <div class="servico-icon"><i class="fas fa-cut"></i></div>
+            <article class="servico-card">
+                <div class="servico-icon" aria-hidden="true"><i class="fas fa-cut"></i></div>
                 <h3>Corte Masculino</h3>
                 <div class="preco">R$ 45,00</div>
                 <p>Cortes modernos e clássicos</p>
-            </div>
-            <div class="servico-card">
-                <div class="servico-icon"><i class="fas fa-scissors"></i></div>
+            </article>
+            <article class="servico-card">
+                <div class="servico-icon" aria-hidden="true"><i class="fas fa-scissors"></i></div>
                 <h3>Barba</h3>
                 <div class="preco">R$ 35,00</div>
                 <p>Toalha quente e produtos premium</p>
-            </div>
-            <div class="servico-card">
-                <div class="servico-icon"><i class="fas fa-magic"></i></div>
+            </article>
+            <article class="servico-card">
+                <div class="servico-icon" aria-hidden="true"><i class="fas fa-magic"></i></div>
                 <h3>Corte + Barba</h3>
                 <div class="preco">R$ 70,00</div>
                 <p>Combo completo</p>
-            </div>
-            <div class="servico-card">
-                <div class="servico-icon"><i class="fas fa-palette"></i></div>
+            </article>
+            <article class="servico-card">
+                <div class="servico-icon" aria-hidden="true"><i class="fas fa-palette"></i></div>
                 <h3>Pigmentação</h3>
-                <div class="preco">R$ 80,00</h3>
+                <div class="preco">R$ 80,00</div>
                 <p>Pigmentação de barba</p>
-            </div>
-            <div class="servico-card">
-                <div class="servico-icon"><i class="fas fa-spa"></i></div>
+            </article>
+            <article class="servico-card">
+                <div class="servico-icon" aria-hidden="true"><i class="fas fa-spa"></i></div>
                 <h3>Hidratação</h3>
                 <div class="preco">R$ 60,00</div>
                 <p>Hidratação capilar</p>
-            </div>
-            <div class="servico-card">
-                <div class="servico-icon"><i class="fas fa-crown"></i></div>
+            </article>
+            <article class="servico-card">
+                <div class="servico-icon" aria-hidden="true"><i class="fas fa-crown"></i></div>
                 <h3>Dia do Noivo</h3>
                 <div class="preco">R$ 200,00</div>
                 <p>Pacote completo para noivos</p>
-            </div>
+            </article>
         </div>
     </section>
 
@@ -132,7 +141,7 @@
             </div>
 
             <div class="cupom-input-group">
-                <input type="text" id="cupomInput" placeholder="🎟️ Tem um cupom? Digite aqui">
+                <input type="text" id="cupomInput" aria-label="Código do cupom" placeholder="🎟️ Tem um cupom? Digite aqui">
             </div>
 
             <div class="resultado-orcamento">
@@ -200,10 +209,11 @@
             </div>
             <div class="form-group full-width">
                 <button type="submit" class="btn btn-primary btn-block">
-                    <i class="far fa-calendar-check"></i> Confirmar Agendamento
+                    <i class="far fa-calendar-check"></i> Salvar simulação neste navegador
                 </button>
                 <p style="text-align:center; margin-top:15px; color:var(--text-light); font-size:14px;">
-                    📱 Você receberá confirmação via WhatsApp<br>
+                    Simulação local: nenhum horário real será reservado.<br>
+                    ⚠️ Site de demonstração: nenhum e-mail ou lembrete é enviado automaticamente.<br>
                     ⭐ Após o serviço, avalie e ganhe pontos!
                 </p>
             </div>
@@ -213,22 +223,41 @@
     <!-- GALERIA -->
     <section id="galeria">
         <h2 class="section-title">Nosso Trabalho</h2>
-        <p class="section-subtitle">Veja alguns dos nossos cortes e estilo</p>
+        <p class="section-subtitle">Referências ilustrativas, não trabalhos comprovados da barbearia.</p>
 
         <div class="galeria-grid">
-            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600')" data-label="Corte Clássico"></div>
-            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600')" data-label="Barba"></div>
-            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600')" data-label="Degradê"></div>
-            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600')" data-label="Corte Moderno"></div>
-            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600')" data-label="Estilo"></div>
-            <div class="galeria-item" style="background-image:url('https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600')" data-label="Atitude"></div>
+            <figure class="galeria-item">
+                <img src="https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=600&q=70&auto=format&fit=crop" alt="Imagem ilustrativa de corte masculino" loading="lazy" decoding="async" width="600" height="600">
+                <figcaption>Corte Clássico</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="https://images.unsplash.com/photo-1622286342621-4bd786c2447c?w=600&q=70&auto=format&fit=crop" alt="Barba aparada com toalha quente" loading="lazy" decoding="async" width="600" height="600">
+                <figcaption>Barba</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=600&q=70&auto=format&fit=crop" alt="Corte degradê moderno" loading="lazy" decoding="async" width="600" height="600">
+                <figcaption>Degradê</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="https://images.unsplash.com/photo-1493256338651-d82f7acb2b38?w=600&q=70&auto=format&fit=crop" alt="Cliente com corte moderno e barba desenhada" loading="lazy" decoding="async" width="600" height="600">
+                <figcaption>Corte Moderno</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?w=600&q=70&auto=format&fit=crop" alt="Detalhe de finalização de corte" loading="lazy" decoding="async" width="600" height="600">
+                <figcaption>Estilo</figcaption>
+            </figure>
+            <figure class="galeria-item">
+                <img src="https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=600&q=70&auto=format&fit=crop" alt="Ambiente interno da barbearia" loading="lazy" decoding="async" width="600" height="600">
+                <figcaption>Atitude</figcaption>
+            </figure>
         </div>
+        <p class="galeria-nota">Imagens ilustrativas (banco de imagens Unsplash).</p>
     </section>
 
     <!-- AVALIAÇÕES -->
     <section id="avaliacoes">
         <h2 class="section-title">O que dizem nossos clientes</h2>
-        <p class="section-subtitle">⭐⭐⭐⭐⭐ Mais de 500 clientes satisfeitos</p>
+        <p class="section-subtitle">Depoimentos ilustrativos de demonstração</p>
 
         <div class="depoimentos-grid" id="depoimentosDinamicos">
             <div class="depoimento">
@@ -263,16 +292,16 @@
                     <small style="color: var(--text-light);">+10 pontos por visita</small>
                 </div>
                 <div class="servico-card">
-                    <div class="servico-icon">👥</div>
+                    <div class="servico-icon" aria-hidden="true">👥</div>
                     <h3>Indique e Ganhe</h3>
-                    <p style="margin: 15px 0;">Indique amigos e ganhe <strong>50 pontos</strong> por indicação convertida!</p>
-                    <small style="color: var(--text-light);">Sem limite de indicações</small>
+                    <p style="margin: 15px 0;">Programa de indicações planejado.</p>
+                    <small style="color: var(--text-light);">Ainda não atribui indicações nem concede bônus.</small>
                 </div>
                 <div class="servico-card">
                     <div class="servico-icon">🎟️</div>
                     <h3>Cupons</h3>
                     <p style="margin: 15px 0;">Use códigos promocionais para ganhar descontos!</p>
-                    <small style="color: var(--text-light);">Tente: <strong style="color: var(--primary);">BEMVINDO10</strong></small>
+                    <small style="color: var(--text-light);">Tente: <strong style="color: var(--gold-ink);">BEMVINDO10</strong></small>
                 </div>
                 <div class="servico-card">
                     <div class="servico-icon">📱</div>
@@ -326,7 +355,7 @@
             </details>
 
             <div style="text-align: center; margin-top: 30px;">
-                <a href="politica-privacidade.html" style="color: var(--primary);">
+                <a href="politica-privacidade.html" style="color: var(--gold-ink);">
                     <i class="fas fa-shield-alt"></i> Política de Privacidade (LGPD)
                 </a>
             </div>
@@ -359,14 +388,14 @@
                     <i class="fab fa-whatsapp"></i>
                     <div>
                         <strong>WhatsApp</strong>
-                        <a href="https://wa.me/553125160233" target="_blank">(31) 2516-0233</a>
+                        <a href="https://wa.me/553125160233" target="_blank" rel="noopener">(31) 2516-0233</a>
                     </div>
                 </div>
                 <div class="info-item">
-                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-instagram" aria-hidden="true"></i>
                     <div>
                         <strong>Instagram</strong>
-                        <a href="https://instagram.com/barbadosbarbershop1.0" target="_blank">@barbadosbarbershop1.0</a>
+                        <a href="https://instagram.com/barbadosbarbershop1.0" target="_blank" rel="noopener">@barbadosbarbershop1.0</a>
                     </div>
                 </div>
                 <div class="info-item">
@@ -382,7 +411,8 @@
 
             <div class="mapa">
                 <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3750.8234567890!2d-43.945!3d-19.857!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTnCsDUxJzI0LjIiUyA0M8KwNTYnNDIuMCJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                    title="Mapa da localização da Barbado's Barbearia na Rua Sena Madureira, 516, Belo Horizonte"
+                    src="https://www.google.com/maps?q=Rua+Sena+Madureira,+516,+Belo+Horizonte,+MG&output=embed"
                     allowfullscreen=""
                     loading="lazy"
                     referrerpolicy="no-referrer-when-downgrade">
@@ -390,6 +420,7 @@
             </div>
         </div>
     </section>
+    </main>
 
     <!-- FOOTER -->
     <footer>
@@ -398,9 +429,9 @@
                 <h3>💈 BARBADO'S</h3>
                 <p>Tradição, estilo e atitude em cada corte.</p>
                 <div class="social-icons">
-                    <a href="https://instagram.com/barbadosbarbershop1.0" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://wa.me/553125160233" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://instagram.com/barbadosbarbershop1.0" target="_blank" rel="noopener" aria-label="Instagram da Barbado's Barbearia"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+                    <a href="https://wa.me/553125160233" target="_blank" rel="noopener" aria-label="WhatsApp da Barbado's Barbearia"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+                    <a href="tel:+553125160233" aria-label="Telefone da Barbado's Barbearia"><i class="fas fa-phone" aria-hidden="true"></i></a>
                 </div>
             </div>
             <div class="footer-section">
@@ -423,6 +454,8 @@
         </div>
     </footer>
 
+    <script src="js/seguranca.js"></script>
+    <script src="js/agenda.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

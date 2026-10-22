@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <button id="sidebarToggle" class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+    <button id="sidebarToggle" class="sidebar-toggle" aria-label="Alternar menu administrativo"><i class="fas fa-bars" aria-hidden="true"></i></button>
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
@@ -71,7 +71,7 @@
 
         <!-- Notificações Dropdown -->
         <div class="notif-dropdown hidden" id="notifDropdown">
-            <h4>Notificações em Tempo Real</h4>
+            <h4>Notificações deste navegador</h4>
             <div id="listaNotificacoes"></div>
             <button class="btn-link" onclick="limparNotificacoes()">Limpar tudo</button>
         </div>
@@ -147,7 +147,7 @@
                     <h3>Todos os Agendamentos</h3>
                     <div class="filter-buttons">
                         <button class="filter-btn active" data-filter="todos">Todos</button>
-                        <button class="filter-btn" data-filter="confirmado">Confirmados</button>
+                        <button class="filter-btn" data-filter="confirmado">Registros locais</button>
                         <button class="filter-btn" data-filter="concluido">Concluídos</button>
                         <button class="filter-btn" data-filter="cancelado">Cancelados</button>
                     </div>
@@ -161,7 +161,7 @@
             <div class="card">
                 <div class="card-header">
                     <h3>Base de Clientes</h3>
-                    <input type="search" id="buscaCliente" placeholder="🔍 Buscar cliente..." class="search-input">
+                    <input type="search" id="buscaCliente" aria-label="Buscar cliente" placeholder="🔍 Buscar cliente..." class="search-input">
                 </div>
                 <div id="listaClientes"></div>
             </div>
@@ -281,31 +281,31 @@
                 <h3><i class="fas fa-store"></i> Informações da Barbearia</h3>
                 <form id="formConfig" class="form-grid">
                     <div class="form-group">
-                        <label>Nome do Estabelecimento</label>
+                        <label for="configNome">Nome do Estabelecimento</label>
                         <input type="text" id="configNome" value="Barbado's Barbearia">
                     </div>
                     <div class="form-group">
-                        <label>WhatsApp</label>
+                        <label for="configWhatsapp">WhatsApp</label>
                         <input type="text" id="configWhatsapp" value="553125160233">
                     </div>
                     <div class="form-group">
-                        <label>E-mail</label>
+                        <label for="configEmail">E-mail</label>
                         <input type="email" id="configEmail" value="contato@barbadosbarbearia.com">
                     </div>
                     <div class="form-group">
-                        <label>Endereço</label>
+                        <label for="configEndereco">Endereço</label>
                         <input type="text" id="configEndereco" value="Rua Sena Madureira, 516 - Belo Horizonte, MG">
                     </div>
                     <div class="form-group">
-                        <label>Abertura (hora)</label>
+                        <label for="configAbre">Abertura (hora)</label>
                         <input type="number" id="configAbre" value="9">
                     </div>
                     <div class="form-group">
-                        <label>Fechamento Seg-Sex (hora)</label>
+                        <label for="configFecha">Fechamento Seg-Sex (hora)</label>
                         <input type="number" id="configFecha" value="20">
                     </div>
                     <div class="form-group">
-                        <label>Sábado fecha às</label>
+                        <label for="configSabado">Sábado fecha às</label>
                         <input type="number" id="configSabado" value="18">
                     </div>
                     <button type="submit" class="btn btn-primary">Salvar Configurações</button>
@@ -329,6 +329,8 @@
         </section>
     </main>
 
+    <aside class="demo-admin-warning" role="note">Painel de demonstração sem autenticação. Dados locais deste navegador, sem sincronização entre aparelhos. Não insira dados reais de clientes.</aside>
+    <script src="../js/seguranca.js"></script>
     <script src="../js/admin.js"></script>
 </body>
 </html>

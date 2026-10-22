@@ -1,4 +1,6 @@
 // === PAINEL ADMINISTRATIVO COMPLETO ===
+const escapar = window.seguranca.escaparHtml;
+const argumento = window.seguranca.jsonParaAtributo;
 
 const ADMIN_CONFIG = {
     intervaloRefresh: 10000, // 10 segundos
@@ -180,7 +182,7 @@ function renderizarNotificacoes() {
         const hora = new Date(n.hora).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
         return `
             <div class="notif-item ${n.lida ? '' : 'unread'}">
-                <span>${n.msg}</span>
+                <span>${escapar(n.msg)}</span>
                 <small>${hora}</small>
             </div>
         `;
@@ -231,7 +233,7 @@ function tocarSom(tipo) {
 function mostrarToast(msg) {
     const toast = document.createElement('div');
     toast.className = 'toast-admin';
-    toast.innerHTML = `<i class="fas fa-bell"></i> ${msg}`;
+    toast.innerHTML = `<i class="fas fa-bell"></i> ${escapar(msg)}`;
     document.body.appendChild(toast);
     setTimeout(() => toast.classList.add('show'), 10);
     setTimeout(() => {
@@ -301,11 +303,11 @@ function carregarProximosAgendamentos() {
         return `
             <div class="admin-item">
                 <div class="admin-item-info">
-                    <h4>${a.nome}</h4>
-                    <p><i class="far fa-clock"></i> ${data} às ${a.horario}</p>
-                    <p><strong>${a.servicos || 'A definir'}</strong></p>
+                    <h4>${escapar(a.nome)}</h4>
+                    <p><i class="far fa-clock"></i> ${data} às ${escapar(a.horario)}</p>
+                    <p><strong>${escapar(a.servicos || 'A definir')}</strong></p>
                 </div>
-                <span class="status-badge status-${a.status}">${a.status}</span>
+                <span class="status-badge status-${escapar(a.status)}">${escapar(a.status === 'confirmado' ? 'registro local' : a.status)}</span>
             </div>
         `;
     }).join('');
@@ -326,9 +328,9 @@ function carregarClientesVIP() {
     container.innerHTML = vips.map(c => `
         <div class="admin-item">
             <div class="admin-item-info">
-                <h4>${c.nome} ${(c.visitas || 0) >= 10 ? '⭐ VIP' : ''}</h4>
-                <p><i class="fas fa-phone"></i> ${c.telefone}</p>
-                <p><i class="fas fa-cut"></i> ${c.visitas || 0} visitas · <i class="fas fa-coins"></i> ${c.pontos || 0} pts</p>
+                <h4>${escapar(c.nome)} ${(c.visitas || 0) >= 10 ? '⭐ VIP' : ''}</h4>
+                <p><i class="fas fa-phone"></i> ${escapar(c.telefone)}</p>
+                <p><i class="fas fa-cut"></i> ${escapar(c.visitas || 0)} visitas · <i class="fas fa-coins"></i> ${escapar(c.pontos || 0)} pts</p>
             </div>
         </div>
     `).join('');
@@ -362,7 +364,7 @@ function carregarTopServicos() {
     const max = top[0][1];
     container.innerHTML = top.map(([nome, qtd]) => `
         <div class="ranking-item">
-            <span>${nome}</span>
+            <span>${escapar(nome)}</span>
             <div class="ranking-bar">
                 <div class="ranking-fill" style="width:${(qtd/max)*100}%"></div>
             </div>
@@ -426,30 +428,30 @@ function carregarAgendamentosAdmin(filtro) {
         return `
             <div class="admin-item">
                 <div class="admin-item-info">
-                    <h4>${a.nome} ${valor ? `<span class="valor">${valor}</span>` : ''}</h4>
-                    <p><i class="fas fa-phone"></i> ${a.telefone}</p>
-                    <p><i class="far fa-calendar"></i> ${data} às ${a.horario} · <i class="fas fa-user"></i> ${a.barbeiro}</p>
-                    <p><strong>${a.servicos}</strong></p>
-                    ${a.observacoes ? `<p><em>"${a.observacoes}"</em></p>` : ''}
+                    <h4>${escapar(a.nome)} ${valor ? `<span class="valor">${valor}</span>` : ''}</h4>
+                    <p><i class="fas fa-phone"></i> ${escapar(a.telefone)}</p>
+                    <p><i class="far fa-calendar"></i> ${data} às ${escapar(a.horario)} · <i class="fas fa-user"></i> ${escapar(a.barbeiro)}</p>
+                    <p><strong>${escapar(a.servicos)}</strong></p>
+                    ${a.observacoes ? `<p><em>"${escapar(a.observacoes)}"</em></p>` : ''}
                 </div>
                 <div class="admin-actions">
                     ${a.status === 'confirmado' ? `
-                        <button class="btn-action btn-complete" onclick="concluirAgendamento(${a.id})" title="Marcar como concluído">
+                        <button class="btn-action btn-complete" onclick="concluirAgendamento(${argumento(a.id)})" title="Marcar como concluído">
                             <i class="fas fa-check"></i>
                         </button>
-                        <button class="btn-action btn-cancel" onclick="cancelarAgendamento(${a.id})" title="Cancelar">
+                        <button class="btn-action btn-cancel" onclick="cancelarAgendamento(${argumento(a.id)})" title="Cancelar">
                             <i class="fas fa-times"></i>
                         </button>
-                        <button class="btn-action btn-whatsapp" onclick="enviarWhatsCliente('${a.telefone}', '${a.nome}')" title="Enviar WhatsApp">
+                        <button class="btn-action btn-whatsapp" onclick="enviarWhatsCliente(${argumento(a.telefone)}, ${argumento(a.nome)})" title="Enviar WhatsApp">
                             <i class="fab fa-whatsapp"></i>
                         </button>
                     ` : ''}
                     ${a.status === 'concluido' && !a.avaliado ? `
-                        <button class="btn-action btn-avaliar" onclick="solicitarAvaliacao(${a.id}, '${a.telefone}')" title="Pedir avaliação">
+                        <button class="btn-action btn-avaliar" onclick="solicitarAvaliacao(${argumento(a.id)}, ${argumento(a.telefone)})" title="Pedir avaliação">
                             <i class="fas fa-star"></i>
                         </button>
                     ` : ''}
-                    <button class="btn-action btn-delete" onclick="excluirAgendamento(${a.id})" title="Excluir">
+                    <button class="btn-action btn-delete" onclick="excluirAgendamento(${argumento(a.id)})" title="Excluir">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -539,13 +541,13 @@ function carregarClientes(busca = '') {
         return `
         <div class="admin-item">
             <div class="admin-item-info">
-                <h4>${c.nome} ${isVIP ? '⭐ VIP' : ''}</h4>
-                <p><i class="fas fa-phone"></i> ${c.telefone} · <i class="fas fa-envelope"></i> ${c.email || 'N/A'}</p>
-                <p><i class="fas fa-cut"></i> ${c.visitas || 0} visitas · <i class="fas fa-coins"></i> ${c.pontos || 0} pontos</p>
-                ${c.aniversario ? `<p>🎂 Aniversário: ${c.aniversario}</p>` : ''}
+                <h4>${escapar(c.nome)} ${isVIP ? '⭐ VIP' : ''}</h4>
+                <p><i class="fas fa-phone"></i> ${escapar(c.telefone)} · <i class="fas fa-envelope"></i> ${escapar(c.email || 'N/A')}</p>
+                <p><i class="fas fa-cut"></i> ${escapar(c.visitas || 0)} visitas · <i class="fas fa-coins"></i> ${escapar(c.pontos || 0)} pontos</p>
+                ${c.aniversario ? `<p>🎂 Aniversário: ${escapar(c.aniversario)}</p>` : ''}
             </div>
             <div class="admin-actions">
-                <button class="btn-action btn-whatsapp" onclick="enviarWhatsCliente('${c.telefone}', '${c.nome}')" title="WhatsApp">
+                <button class="btn-action btn-whatsapp" onclick="enviarWhatsCliente(${argumento(c.telefone)}, ${argumento(c.nome)})" title="WhatsApp">
                     <i class="fab fa-whatsapp"></i>
                 </button>
             </div>
@@ -575,15 +577,15 @@ function carregarServicos() {
     container.innerHTML = servicos.map(s => `
         <div class="admin-item">
             <div class="admin-item-info">
-                <h4>${s.nome} ${s.ativo ? '' : '<small>(Inativo)</small>'}</h4>
-                <p><span class="badge-categoria">${s.categoria || 'Geral'}</span></p>
-                <p><i class="fas fa-money-bill"></i> R$ ${s.preco.toFixed(2)} · <i class="far fa-clock"></i> ${s.duracao} min</p>
+                <h4>${escapar(s.nome)} ${s.ativo ? '' : '<small>(Inativo)</small>'}</h4>
+                <p><span class="badge-categoria">${escapar(s.categoria || 'Geral')}</span></p>
+                <p><i class="fas fa-money-bill"></i> R$ ${Number(s.preco).toFixed(2)} · <i class="far fa-clock"></i> ${escapar(s.duracao)} min</p>
             </div>
             <div class="admin-actions">
-                <button class="btn-action btn-edit" onclick="editarServico(${s.id})">
+                <button class="btn-action btn-edit" onclick="editarServico(${argumento(s.id)})">
                     <i class="fas fa-edit"></i>
                 </button>
-                <button class="btn-action btn-delete" onclick="excluirServico(${s.id})">
+                <button class="btn-action btn-delete" onclick="excluirServico(${argumento(s.id)})">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -654,16 +656,16 @@ function carregarCupons() {
         return `
             <div class="admin-item">
                 <div class="admin-item-info">
-                    <h4><span class="cupom-codigo">${codigo}</span></h4>
-                    <p>${dados.descricao || 'Sem descrição'}</p>
-                    <p><strong>Desconto:</strong> ${valorTxt} · <strong>Validade:</strong> ${validade}</p>
-                    <p>Usos: ${dados.usos || 0} ${dados.ativo ? '✅' : '❌ Inativo'}</p>
+                    <h4><span class="cupom-codigo">${escapar(codigo)}</span></h4>
+                    <p>${escapar(dados.descricao || 'Sem descrição')}</p>
+                    <p><strong>Desconto:</strong> ${escapar(valorTxt)} · <strong>Validade:</strong> ${validade}</p>
+                    <p>Usos: ${escapar(dados.usos || 0)} ${dados.ativo ? '✅' : '❌ Inativo'}</p>
                 </div>
                 <div class="admin-actions">
-                    <button class="btn-action btn-toggle ${dados.ativo ? 'btn-complete' : 'btn-cancel'}" onclick="toggleCupom('${codigo}')" title="Ativar/Desativar">
+                    <button class="btn-action btn-toggle ${dados.ativo ? 'btn-complete' : 'btn-cancel'}" onclick="toggleCupom(${argumento(codigo)})" title="Ativar/Desativar">
                         <i class="fas fa-${dados.ativo ? 'eye' : 'eye-slash'}"></i>
                     </button>
-                    <button class="btn-action btn-delete" onclick="excluirCupom('${codigo}')">
+                    <button class="btn-action btn-delete" onclick="excluirCupom(${argumento(codigo)})">
                         <i class="fas fa-trash"></i>
                     </button>
                 </div>
@@ -693,11 +695,11 @@ function carregarEstatisticasCupons() {
                 <p>Cupons Ativos</p>
             </div>
             <div class="stat-box">
-                <h3>${totalUsos}</h3>
+                <h3>${escapar(totalUsos)}</h3>
                 <p>Usos Totais</p>
             </div>
             <div class="stat-box">
-                <h3>${maisUsado ? maisUsado[0] : '—'}</h3>
+                <h3>${escapar(maisUsado ? maisUsado[0] : '—')}</h3>
                 <p>Mais Usado</p>
             </div>
         </div>
@@ -705,7 +707,7 @@ function carregarEstatisticasCupons() {
 }
 
 function novoCupom() {
-    const codigo = prompt('Código do cupom (ex: VERAO20):').toUpperCase();
+    const codigo = (prompt('Código do cupom (ex: VERAO20):') || '').trim().toUpperCase();
     if (!codigo) return;
     const tipo = confirm('OK = Porcentagem | Cancelar = Valor fixo') ? 'percentual' : 'fixo';
     const valor = parseFloat(prompt(`Valor (${tipo === 'percentual' ? '%' : 'R$'}):`));
@@ -771,11 +773,11 @@ function carregarAvaliacoes() {
         return `
             <div class="admin-item avaliacao-item">
                 <div class="admin-item-info">
-                    <h4>${av.nome} <span class="estrelas-mini">${'★'.repeat(av.nota)}${'☆'.repeat(5 - av.nota)}</span></h4>
-                    <p>"${av.comentario || 'Sem comentário'}"</p>
+                    <h4>${escapar(av.nome)} <span class="estrelas-mini">${'★'.repeat(window.seguranca.inteiroLimitado(av.nota, 1, 5, 5))}${'☆'.repeat(5 - window.seguranca.inteiroLimitado(av.nota, 1, 5, 5))}</span></h4>
+                    <p>"${escapar(av.comentario || 'Sem comentário')}"</p>
                     <small><i class="far fa-calendar"></i> ${data}</small>
                 </div>
-                <button class="btn-icon-sm" onclick="excluirAvaliacao('${av.data}')" title="Excluir">
+                <button class="btn-icon-sm" onclick="excluirAvaliacao(${argumento(av.data)})" title="Excluir">
                     <i class="fas fa-trash"></i>
                 </button>
             </div>
@@ -827,8 +829,8 @@ function carregarFinanceiro() {
         return `
             <div class="admin-item">
                 <div class="admin-item-info">
-                    <h4>${a.nome}</h4>
-                    <p>${data} às ${a.horario} · ${a.servicos}</p>
+                    <h4>${escapar(a.nome)}</h4>
+                    <p>${data} às ${escapar(a.horario)} · ${escapar(a.servicos)}</p>
                 </div>
                 <strong style="color:#28a745; font-size:18px;">+${valor}</strong>
             </div>

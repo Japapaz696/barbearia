@@ -1,4 +1,11 @@
 // === DASHBOARD DO CLIENTE ===
+const escapar = window.seguranca.escaparHtml;
+const argumento = window.seguranca.jsonParaAtributo;
+
+function logout() {
+    sessionStorage.removeItem('clienteLogado');
+    window.location.href = 'login.html';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Verifica login
@@ -31,6 +38,7 @@ function carregarDashboard(cliente) {
     const progresso = ((clienteAtual.visitas || 0) % 10) * 10;
     document.getElementById('progressFill').style.width = `${progresso}%`;
     document.getElementById('progressPercent').textContent = `${progresso}%`;
+    document.getElementById('progressBar')?.setAttribute('aria-valuenow', String(progresso));
 
     // Próximo brinde
     if (progresso === 0 && (clienteAtual.visitas || 0) > 0) {
@@ -67,18 +75,18 @@ function carregarAgendamentos(cliente) {
         return `
             <div class="agendamento-item">
                 <div class="agendamento-info">
-                    <h4>${a.servicos || 'Serviço não informado'}</h4>
-                    <p><i class="far fa-calendar"></i> ${data} às ${a.horario}</p>
-                    <p><i class="fas fa-user"></i> Barbeiro: ${a.barbeiro || 'Não definido'}</p>
-                    ${a.observacoes ? `<p><em>${a.observacoes}</em></p>` : ''}
+                    <h4>${escapar(a.servicos || 'Serviço não informado')}</h4>
+                    <p><i class="far fa-calendar"></i> ${data} às ${escapar(a.horario)}</p>
+                    <p><i class="fas fa-user"></i> Barbeiro: ${escapar(a.barbeiro || 'Não definido')}</p>
+                    ${a.observacoes ? `<p><em>${escapar(a.observacoes)}</em></p>` : ''}
                     ${podeAvaliar ? `
                         <button class="btn btn-primary" style="margin-top:10px; padding:8px 16px; font-size:13px;"
-                                onclick="abrirAvaliacao(${a.id})">
+                                onclick="abrirAvaliacao(${argumento(a.id)})">
                             <i class="fas fa-star"></i> Avaliar este atendimento
                         </button>
                     ` : ''}
                 </div>
-                <span class="status-badge status-${status}">${status}</span>
+                <span class="status-badge status-${escapar(status)}">${escapar(status === 'confirmado' ? 'registro local' : status)}</span>
             </div>
         `;
     }).join('');
@@ -104,9 +112,9 @@ function carregarHistorico(cliente) {
         return `
             <div class="visita-item">
                 <div class="visita-info">
-                    <h4>${h.servicos || 'Serviço'}</h4>
-                    <p><i class="far fa-calendar"></i> ${data} às ${h.horario} · ${avaliado}</p>
-                    <p><i class="fas fa-user"></i> ${h.barbeiro || 'Barbeiro'}</p>
+                    <h4>${escapar(h.servicos || 'Serviço')}</h4>
+                    <p><i class="far fa-calendar"></i> ${data} às ${escapar(h.horario)} · ${avaliado}</p>
+                    <p><i class="fas fa-user"></i> ${escapar(h.barbeiro || 'Barbeiro')}</p>
                 </div>
                 <span style="color:var(--primary); font-weight:bold;">+10 pts</span>
             </div>
@@ -164,21 +172,19 @@ window.mostrarIndiqueGanhe = function() {
             <div class="modal-icon" style="background:#17a2b8;"><i class="fas fa-users"></i></div>
             <h2>Indique e Ganhe 🎁</h2>
             <div class="modal-info" style="text-align:left; background:linear-gradient(135deg,#e7f3ff,#fff);">
-                <p><strong>Seu código:</strong> <span style="font-family:monospace; background:var(--primary); color:var(--secondary); padding:4px 12px; border-radius:6px;">${codigoIndicacao}</span></p>
+                <p><strong>Seu código:</strong> <span style="font-family:monospace; background:var(--primary); color:var(--secondary); padding:4px 12px; border-radius:6px;">${escapar(codigoIndicacao)}</span></p>
                 <p><strong>Seu link:</strong></p>
-                <div style="background:white; padding:10px; border-radius:6px; font-size:12px; word-break:break-all; border:1px solid var(--border);">${linkIndicacao}</div>
+                <div style="background:white; padding:10px; border-radius:6px; font-size:12px; word-break:break-all; border:1px solid var(--border);">${escapar(linkIndicacao)}</div>
                 <hr style="margin:15px 0;">
                 <p><strong>Como funciona:</strong></p>
                 <ul style="margin-left:20px; line-height:1.8;">
                     <li>Compartilhe seu código ou link com amigos</li>
-                    <li>Quando eles se cadastrarem e fizerem o 1º agendamento, <strong>você ganha 50 pontos!</strong></li>
-                    <li>Seu amigo ganha <strong>10% OFF</strong> no primeiro agendamento</li>
-                    <li>Sem limite de indicações!</li>
+                    <li>Recurso planejado: este link ainda não atribui indicações nem concede bônus.</li>
                 </ul>
             </div>
             <div class="modal-actions" style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-                <button class="btn btn-primary" onclick="copiarLink('${linkIndicacao}')"><i class="fas fa-copy"></i> Copiar Link</button>
-                <button class="btn btn-secondary" onclick="compartilharWhats('${linkIndicacao}')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="btn btn-primary" onclick="copiarLink(${argumento(linkIndicacao)})"><i class="fas fa-copy"></i> Copiar Link</button>
+                <button class="btn btn-secondary" onclick="compartilharWhats(${argumento(linkIndicacao)})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
             </div>
             <button class="btn btn-block" onclick="this.closest('.modal-overlay').remove()" style="margin-top:15px; background:transparent; color:var(--gray);">Fechar</button>
         </div>
@@ -193,21 +199,21 @@ window.copiarLink = function(link) {
 };
 
 window.compartilharWhats = function(link) {
-    const msg = `💈 Venha conhecer a Barbado's Barbearia! Use meu link e ganhe 10% OFF no primeiro agendamento: ${link}`;
+    const msg = `Demonstração da Barbado's Barbearia (indicações ainda não implementadas): ${link}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
 // === VERIFICAR LEMBRETES ===
 function verificarLembretes(cliente) {
     const lembretes = JSON.parse(localStorage.getItem('lembretes') || '[]');
-    const meusLembretes = lembretes.filter(l => l.clienteTelefone === cliente.telefone && !l.executado);
+    const meusLembretes = lembretes.filter(l => l.clienteTelefone === cliente.telefone && !l.executado && new Date(l.dataLembrete) <= new Date());
 
     if (meusLembretes.length > 0) {
         setTimeout(() => {
             meusLembretes.forEach(l => {
                 const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
                 const ag = agendamentos.find(a => a.id === l.agendamentoId);
-                if (ag && ag.status === 'confirmado') {
+                if (ag && ag.status === 'confirmado' && new Date(ag.data + 'T' + ag.horario) > new Date()) {
                     const data = new Date(ag.data + 'T00:00:00').toLocaleDateString('pt-BR');
                     const modal = document.createElement('div');
                     modal.className = 'modal-overlay active';
@@ -216,9 +222,9 @@ function verificarLembretes(cliente) {
                             <div class="modal-icon" style="background:#ffc107; color:#333;"><i class="fas fa-bell"></i></div>
                             <h2>Lembrete de Agendamento</h2>
                             <div class="modal-info">
-                                <p>Olá <strong>${cliente.nome.split(' ')[0]}</strong>!</p>
-                                <p>Você tem agendamento <strong>amanhã (${data}) às ${ag.horario}</strong></p>
-                                <p>Serviço: ${ag.servicos}</p>
+                                <p>Olá <strong>${escapar(cliente.nome.split(' ')[0])}</strong>!</p>
+                                <p>Registro local de demonstração: <strong>${data} às ${escapar(ag.horario)}</strong></p>
+                                <p>Serviço: ${escapar(ag.servicos)}</p>
                             </div>
                             <button class="btn btn-primary btn-block" onclick="this.closest('.modal-overlay').remove()">Entendi!</button>
                         </div>
@@ -297,7 +303,8 @@ window.abrirAvaliacao = function(agendamentoId) {
 function mostrarNotificacao(mensagem, cor = '#28a745') {
     const div = document.createElement('div');
     div.className = 'notificacao';
-    div.innerHTML = `<i class="fas fa-check-circle"></i> ${mensagem}`;
+    div.setAttribute('role', 'status');
+    div.textContent = mensagem;
     div.style.background = cor;
     document.body.appendChild(div);
     setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 4000);

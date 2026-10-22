@@ -1,67 +1,21 @@
 {
+    "id": "./",
     "name": "Barbado's Barbearia",
     "short_name": "Barbado's",
     "description": "Tradição, estilo e atitude. Agende seu horário na melhor barbearia de BH!",
-    "start_url": "/index.html",
+    "start_url": "./index.html",
     "display": "standalone",
     "background_color": "#1a1a1a",
-    "theme_color": "#d4a574",
+    "theme_color": "#1a1a1a",
     "orientation": "portrait-primary",
-    "scope": "/",
+    "scope": "./",
     "lang": "pt-BR",
+    "dir": "ltr",
     "icons": [
         {
-            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>",
+            "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%231a1a1a'/%3E%3Ctext x='256' y='344' text-anchor='middle' font-size='280'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E",
             "sizes": "any",
             "type": "image/svg+xml",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-72.png",
-            "sizes": "72x72",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-96.png",
-            "sizes": "96x96",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-128.png",
-            "sizes": "128x128",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-144.png",
-            "sizes": "144x144",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-152.png",
-            "sizes": "152x152",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-384.png",
-            "sizes": "384x384",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png",
             "purpose": "any maskable"
         }
     ],
@@ -71,24 +25,23 @@
             "name": "Agendar Horário",
             "short_name": "Agendar",
             "description": "Faça um novo agendamento",
-            "url": "/index.html#agendamento",
-            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+            "url": "./index.html#agendamento",
+            "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%231a1a1a'/%3E%3Ctext x='256' y='344' text-anchor='middle' font-size='280'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E", "sizes": "any", "type": "image/svg+xml" }]
         },
         {
             "name": "Ver Orçamento",
             "short_name": "Orçamento",
             "description": "Calcule seu orçamento",
-            "url": "/index.html#orcamento",
-            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+            "url": "./index.html#orcamento",
+            "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%231a1a1a'/%3E%3Ctext x='256' y='344' text-anchor='middle' font-size='280'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E", "sizes": "any", "type": "image/svg+xml" }]
         },
         {
             "name": "WhatsApp",
             "short_name": "WhatsApp",
             "description": "Fale conosco no WhatsApp",
-            "url": "https://wa.me/553125160233",
-            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+            "url": "./index.html#contato",
+            "icons": [{ "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='96' fill='%231a1a1a'/%3E%3Ctext x='256' y='344' text-anchor='middle' font-size='280'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E", "sizes": "any", "type": "image/svg+xml" }]
         }
     ],
-    "screenshots": [],
     "prefer_related_applications": false
 }

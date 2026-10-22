@@ -3,65 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Crie sua conta na Barbado's Barbearia e ganhe pontos de boas-vindas.">
+    <meta name="theme-color" content="#1a1a1a">
+    <meta name="robots" content="noindex">
     <title>Cadastro - Barbado's Barbearia</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a1a1a'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='58'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/cliente.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="auth-body">
-    <div class="auth-container">
+    <main class="auth-container">
         <div class="auth-box auth-box-large">
             <div class="auth-header">
-                <h1><i class="fas fa-scissors"></i> BARBADO'S</h1>
+                <h1><i class="fas fa-scissors" aria-hidden="true"></i> BARBADO'S</h1>
                 <p>Crie sua conta e ganhe pontos!</p>
             </div>
             <div class="promo-banner">
-                <i class="fas fa-gift"></i> <strong>10% OFF</strong> no primeiro agendamento!
+                <i class="fas fa-gift" aria-hidden="true"></i>
+                <strong>+20 pontos</strong> de boas-vindas. Use <strong>BEMVINDO10</strong> no orçamento para simular 10% de desconto.
             </div>
-            <form id="formCadastro" class="auth-form">
+            <div class="demo-note" role="note">
+                <i class="fas fa-flask" aria-hidden="true"></i>
+                <span>Área de demonstração: a conta e os pontos ficam salvos apenas neste navegador.</span>
+            </div>
+            <form id="formCadastro" class="auth-form" novalidate>
                 <div class="form-row">
                     <div class="form-group">
-                        <label><i class="fas fa-user"></i> Nome completo</label>
-                        <input type="text" id="nomeCadastro" required placeholder="Seu nome">
+                        <label for="nomeCadastro"><i class="fas fa-user" aria-hidden="true"></i> Nome completo</label>
+                        <input type="text" id="nomeCadastro" name="nome" autocomplete="name" required placeholder="Seu nome">
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-phone"></i> Telefone</label>
-                        <input type="tel" id="telefoneCadastro" required placeholder="(31) 99999-9999">
+                        <label for="telefoneCadastro"><i class="fas fa-phone" aria-hidden="true"></i> Telefone</label>
+                        <input type="tel" id="telefoneCadastro" name="telefone" autocomplete="tel" required placeholder="(31) 99999-9999">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-envelope"></i> E-mail</label>
-                    <input type="email" id="emailCadastro" required placeholder="seu@email.com">
+                    <label for="emailCadastro"><i class="fas fa-envelope" aria-hidden="true"></i> E-mail</label>
+                    <input type="email" id="emailCadastro" name="email" autocomplete="email" required placeholder="seu@email.com">
                 </div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label><i class="fas fa-lock"></i> Senha</label>
-                        <input type="password" id="senhaCadastro" required placeholder="Mínimo 6 caracteres" minlength="6">
+                        <label for="senhaCadastro"><i class="fas fa-lock" aria-hidden="true"></i> Senha</label>
+                        <input type="password" id="senhaCadastro" name="senha" autocomplete="new-password" required placeholder="Mínimo 8 caracteres" minlength="8">
                     </div>
                     <div class="form-group">
-                        <label><i class="fas fa-lock"></i> Confirmar senha</label>
-                        <input type="password" id="confirmaSenha" required placeholder="Repita a senha">
+                        <label for="confirmaSenha"><i class="fas fa-lock" aria-hidden="true"></i> Confirmar senha</label>
+                        <input type="password" id="confirmaSenha" name="confirmaSenha" autocomplete="new-password" required placeholder="Repita a senha" minlength="8">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label><i class="fas fa-calendar"></i> Data de nascimento</label>
-                    <input type="date" id="nascimentoCadastro">
+                    <label for="nascimentoCadastro"><i class="fas fa-calendar" aria-hidden="true"></i> Data de nascimento (opcional)</label>
+                    <input type="date" id="nascimentoCadastro" name="nascimento" autocomplete="bday">
                 </div>
                 <div class="form-check">
-                    <input type="checkbox" id="aceitaTermos" required>
-                    <label for="aceitaTermos">Aceito receber promoções e novidades</label>
+                    <input type="checkbox" id="aceitaPrivacidade" required>
+                    <label for="aceitaPrivacidade">Li e aceito a <a href="../politica-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</label>
+                </div>
+                <div class="form-check">
+                    <input type="checkbox" id="aceitaTermos">
+                    <label for="aceitaTermos">Quero receber promoções e novidades (opcional).</label>
                 </div>
                 <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-user-plus"></i> Criar Conta
+                    <i class="fas fa-user-plus" aria-hidden="true"></i> Criar Conta
                 </button>
                 <p class="auth-link">Já tem conta? <a href="login.html">Faça login</a></p>
             </form>
             <div class="auth-back">
-                <a href="../index.html"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
+                <a href="../index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao site</a>
             </div>
         </div>
-    </div>
+    </main>
+    <div id="notificacoes" aria-live="polite"></div>
+    <script src="../js/seguranca.js"></script>
     <script src="../js/senha.js"></script>
-<script src="../js/cliente.js"></script>
+    <script src="../js/cliente.js"></script>
 </body>
 </html>

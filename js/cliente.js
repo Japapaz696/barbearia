@@ -13,6 +13,9 @@ const formLogin = document.getElementById('formLogin');
 if (formLogin) {
     formLogin.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (formLogin.dataset.enviando === 'true') return;
+        formLogin.dataset.enviando = 'true';
+        try {
         const telefone = document.getElementById('telefoneLogin').value.replace(/\D/g, '');
         const senha = document.getElementById('senhaLogin').value;
 
@@ -48,6 +51,11 @@ if (formLogin) {
         } else {
             mostrarNotificacao('Telefone ou senha incorretos!', '#dc3545');
         }
+        } catch (erro) {
+            mostrarNotificacao('Não foi possível acessar a conta local. Verifique os dados deste navegador.', '#dc3545');
+        } finally {
+            formLogin.dataset.enviando = 'false';
+        }
     });
 }
 
@@ -56,6 +64,10 @@ const formCadastro = document.getElementById('formCadastro');
 if (formCadastro) {
     formCadastro.addEventListener('submit', async (e) => {
         e.preventDefault();
+        if (formCadastro.dataset.enviando === 'true') return;
+        if (!formCadastro.reportValidity()) return;
+        formCadastro.dataset.enviando = 'true';
+        try {
 
         const nome = document.getElementById('nomeCadastro').value.trim();
         const telefone = document.getElementById('telefoneCadastro').value.replace(/\D/g, '');
@@ -63,6 +75,7 @@ if (formCadastro) {
         const senha = document.getElementById('senhaCadastro').value;
         const confirmaSenha = document.getElementById('confirmaSenha').value;
         const nascimento = document.getElementById('nascimentoCadastro').value;
+        const aceitaPrivacidade = document.getElementById('aceitaPrivacidade').checked;
         const aceitaTermos = document.getElementById('aceitaTermos').checked;
 
         if (!nome || !telefone || !email || !senha) {
@@ -70,8 +83,8 @@ if (formCadastro) {
             return;
         }
 
-        if (senha.length < 6) {
-            mostrarNotificacao('A senha deve ter pelo menos 6 caracteres!', '#dc3545');
+        if (senha.length < 8) {
+            mostrarNotificacao('A senha deve ter pelo menos 8 caracteres!', '#dc3545');
             return;
         }
 
@@ -80,8 +93,8 @@ if (formCadastro) {
             return;
         }
 
-        if (!aceitaTermos) {
-            mostrarNotificacao('Você deve aceitar os termos!', '#dc3545');
+        if (!aceitaPrivacidade) {
+            mostrarNotificacao('Leia e aceite o aviso de privacidade da demonstração.', '#dc3545');
             return;
         }
 
@@ -104,6 +117,7 @@ if (formCadastro) {
             email,
             senha: await hashSenha.gerarHashSenha(senha),
             nascimento,
+            aceitaPromocoes: aceitaTermos,
             pontos: 20, // Bônus de boas-vindas
             visitas: 0,
             primeiroAgendamento: false,
@@ -131,6 +145,11 @@ if (formCadastro) {
 
         mostrarNotificacao('Conta criada! +20 pontos de boas-vindas 🎁', '#28a745');
         setTimeout(() => window.location.href = 'dashboard.html', 1500);
+        } catch (erro) {
+            mostrarNotificacao('Não foi possível concluir o cadastro local. Verifique o armazenamento do navegador.', '#dc3545');
+        } finally {
+            formCadastro.dataset.enviando = 'false';
+        }
     });
 }
 
@@ -144,7 +163,8 @@ function logout() {
 function mostrarNotificacao(mensagem, cor = '#28a745') {
     const div = document.createElement('div');
     div.className = 'notificacao';
-    div.innerHTML = `<i class="fas fa-check-circle"></i> ${mensagem}`;
+    div.setAttribute('role', 'status');
+    div.textContent = mensagem;
     div.style.background = cor;
     document.body.appendChild(div);
     setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 4000);

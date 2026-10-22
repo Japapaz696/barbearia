@@ -1,5 +1,56 @@
 /* === BARBADO'S BARBEARIA - CSS COMPLETO === */
 
+/* Correções de acessibilidade: preserva o dourado da identidade e usa
+   uma variante escura somente para texto sobre superfícies claras. */
+:root { --gold-ink: #875528; }
+body.dark-mode { --gold-ink: #d4a574; }
+.demo-banner, .demo-note {
+    padding: 12px 20px;
+    background: #fff3cf;
+    color: #473717;
+    font-size: 14px;
+    line-height: 1.5;
+}
+.demo-note { margin-bottom: 20px; }
+.demo-admin-warning {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    padding: 12px 20px;
+    background: #fff3cf;
+    color: #473717;
+    font-size: 14px;
+}
+body:has(.demo-admin-warning) { padding-bottom: 100px; }
+button:focus-visible, a:focus-visible, summary:focus-visible {
+    outline: 3px solid #1675c4;
+    outline-offset: 4px;
+}
+main .servico-card .preco, main .depoimento strong,
+main .resultado-orcamento h3, main .linha-resultado.total,
+main .checkbox-item .preco-item { color: var(--gold-ink); }
+.galeria-item { margin: 0; }
+.galeria-item img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.galeria-item figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px;
+    color: white;
+    background: #1a1a1ae6;
+}
+.galeria-nota { margin-top: 16px; text-align: center; }
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        scroll-behavior: auto !important;
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
 :root {
     --primary: #d4a574;
     --primary-dark: #b8895a;
@@ -947,3 +998,34 @@ html { scroll-behavior: smooth; }
 ::-webkit-scrollbar-track { background: var(--light-gray); }
 ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--primary-dark); }
+
+/* Breakpoint orientado pelo conteúdo: a navegação completa não cabe em tablets. */
+@media (max-width: 1150px) {
+    .nav-container .hamburger { display: block; }
+    .nav-container .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: var(--secondary);
+        flex-direction: column;
+        padding: 20px;
+        gap: 15px;
+    }
+    .nav-container .nav-menu.active { display: flex; }
+}
+.navbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; }
+.navbar .nav-menu { position: static; display: flex; flex-direction: row; gap: 16px; }
+.navbar .logo h1 { font-size: 22px; }
+.auth-header h1 { color: var(--gold-ink); }
+.auth-container a { color: var(--gold-ink); }
+.indique-bar { margin: 20px 0; padding: 16px; border: 1px solid var(--border); border-radius: 8px; }
+.galeria-item::after { display: none; }
+.agendamento-form > *, .checkbox-grid > *, .form-row > * { min-width: 0; }
+.contato-info a { overflow-wrap: anywhere; }
+@media (max-width: 480px) {
+    .agendamento-form, .checkbox-grid { grid-template-columns: minmax(0, 1fr); }
+    .navbar { flex-wrap: wrap; }
+    .notificacao { max-width: calc(100vw - 40px); min-width: 0; }
+    .auth-box { padding: 24px 18px; }
+    .auth-header h1 { font-size: 26px; }
+}

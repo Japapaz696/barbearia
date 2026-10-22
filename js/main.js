@@ -1,4 +1,22 @@
 // === BARBADO'S BARBEARIA - SISTEMA COMPLETO ===
+//
+// ---------------------------------------------------------------------------
+// AVISO DE DEMONSTRACAO (nao remova este bloco)
+// ---------------------------------------------------------------------------
+// Este site e um PROTOTIPO ESTATICO. Nao existe backend, banco de dados,
+// autenticacao real, envio de e-mail nem disparo automatico de WhatsApp.
+//
+//  - "Agendamento" grava um registro no localStorage DESTE navegador. Nao
+//    reserva horario em nenhum sistema central e nao reserva nada em outro
+//    aparelho. Limpar os dados do navegador apaga os agendamentos.
+//  - Nao existe e-mail de confirmacao nem lembrete automatico. O botao de
+//    WhatsApp apenas ABRE uma conversa pre-preenchida: quem envia a mensagem
+//    e a propria pessoa.
+//  - A area do cliente e um prototipo de UX: a senha e derivada no navegador
+//    (PBKDF2) apenas para nao ficar em texto puro no aparelho, mas quem
+//    controla o navegador controla a verificacao. Login de verdade exige
+//    servidor com sessao em cookie HttpOnly.
+// ---------------------------------------------------------------------------
 
 const CONFIG = {
     whatsapp: '553125160233',
@@ -10,6 +28,25 @@ const CONFIG = {
     cortesParaBrinde: 10,
     bonusIndicacao: 50,
     avaliarAposDias: 1
+};
+
+// Acesso curto aos modulos compartilhados (carregados antes deste arquivo).
+const seguro = window.seguranca;
+const agenda = window.agenda;
+
+// Servicos conhecidos: usados para descobrir a duracao real de um combo.
+const SERVICOS_CONHECIDOS = {
+    'Corte Masculino': 30,
+    'Barba': 25,
+    'Corte + Barba': 50,
+    'Pigmentação': 40,
+    'Pigmentação de Barba': 40,
+    'Hidratação': 30,
+    'Hidratação Capilar': 30,
+    'Pezinho': 15,
+    'Pézinho': 15,
+    'Sobrancelha': 15,
+    'Dia do Noivo': 120
 };
 
 // === INICIALIZAÇÃO ===
@@ -36,34 +73,59 @@ function initDarkMode() {
 
     const btn = document.getElementById('darkModeToggle');
     if (btn) {
+        atualizarRotuloTema(document.body.classList.contains('dark-mode'));
         btn.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDark);
             atualizarIconeTema(isDark);
+            atualizarRotuloTema(isDark);
         });
     }
 }
 
 function atualizarIconeTema(isDark) {
     const btn = document.getElementById('darkModeToggle');
-    if (btn) btn.innerHTML = isDark ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    if (btn) btn.innerHTML = isDark ? '<i class="fas fa-sun" aria-hidden="true"></i>' : '<i class="fas fa-moon" aria-hidden="true"></i>';
+}
+
+// O botao so tem icone; sem rotulo, leitores de tela nao sabem o que ele faz.
+function atualizarRotuloTema(isDark) {
+    const btn = document.getElementById('darkModeToggle');
+    if (!btn) return;
+    btn.setAttribute('aria-pressed', String(isDark));
+    btn.setAttribute('aria-label', isDark ? 'Desativar modo escuro' : 'Ativar modo escuro');
+    btn.setAttribute('title', isDark ? 'Desativar modo escuro' : 'Ativar modo escuro');
 }
 
 // === MENU MOBILE ===
 function initMenu() {
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
-    if (hamburger) {
-        hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
-    }
+    if (!hamburger || !navMenu) return;
+
+    hamburger.addEventListener('click', () => {
+        const aberto = navMenu.classList.toggle('active');
+        hamburger.setAttribute('aria-expanded', String(aberto));
+    });
+
+    // Fecha ao apertar Esc e devolve o foco ao botao.
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+            hamburger.focus();
+        }
+    });
 }
 
 // === DATA MÍNIMA ===
+// Usa a data LOCAL. `toISOString()` usa UTC e, depois das 21h no Brasil, marca
+// o dia seguinte como minimo — o que impedia agendar "hoje".
 function setMinDate() {
     const dataInput = document.getElementById('dataAgendamento');
     if (dataInput) {
-        dataInput.min = new Date().toISOString().split('T')[0];
+        dataInput.min = agenda.hojeLocal();
     }
 }
 
@@ -72,10 +134,42 @@ function initCalendario() {
     const dataInput = document.getElementById('dataAgendamento');
     if (!dataInput) return;
 
-    // Criar visualização de dias da semana
     dataInput.addEventListener('change', () => {
         atualizarHorariosDisponiveis(dataInput.value);
     });
+
+    const barbeiro = document.getElementById('barbeiro');
+    if (barbeiro) {
+        barbeiro.addEventListener('change', () => {
+            atualizarHorariosDisponiveis(dataInput.value);
+        });
+    }
+}
+
+// Duração, em minutos, do conjunto de serviços escolhidos. A agenda precisa
+// dela para calcular o fim do atendimento e os conflitos.
+function duracaoDosServicos(nomesServicos) {
+    if (typeof nomesServicos === 'string' && SERVICOS_CONHECIDOS[nomesServicos.trim()]) {
+        return SERVICOS_CONHECIDOS[nomesServicos.trim()];
+    }
+    const nomes = Array.isArray(nomesServicos) ? nomesServicos : String(nomesServicos || '').split('+');
+    let total = 0;
+    for (const cru of nomes) {
+        const nome = String(cru).trim();
+        if (!nome) continue;
+        total += SERVICOS_CONHECIDOS[nome] || CONFIG.intervaloMinutos;
+    }
+    return total > 0 ? total : CONFIG.intervaloMinutos;
+}
+
+function duracaoSelecionadaNoSite() {
+    const marcados = document.querySelectorAll('.checkbox-item input[type="checkbox"]:checked');
+    if (marcados.length > 0) {
+        const nomes = [...marcados].map((cb) => cb.dataset.nome);
+        return duracaoDosServicos(nomes);
+    }
+    const texto = document.getElementById('servicosAgendamento')?.value || '';
+    return duracaoDosServicos(texto);
 }
 
 function atualizarHorariosDisponiveis(data) {
@@ -84,28 +178,40 @@ function atualizarHorariosDisponiveis(data) {
     if (!select) return;
 
     const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
-    const ocupados = agendamentos
-        .filter(a => a.data === data && a.status !== 'cancelado')
-        .map(a => a.horario);
+    const barbeiro = document.getElementById('barbeiro')?.value || 'Qualquer um';
+    const duracao = duracaoSelecionadaNoSite();
 
-    select.innerHTML = '<option value="">Selecione um horário</option>';
-
-    // Gera horários de 9h às 20h (ou 18h sábado)
-    const dataObj = new Date(data + 'T00:00:00');
-    const diaSemana = dataObj.getDay();
-    const isSabado = diaSemana === 6;
-    const horaFechamento = isSabado ? CONFIG.horario.sabadoAte : CONFIG.horario.fecha;
-
-    for (let h = CONFIG.horario.abre; h < horaFechamento; h++) {
-        for (let m = 0; m < 60; m += CONFIG.intervaloMinutos) {
-            const hora = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
-            const ocupado = ocupados.includes(hora);
-            const option = document.createElement('option');
-            option.value = hora;
-            option.textContent = `${hora}${ocupado ? ' (Indisponível)' : ''}`;
-            if (ocupado) option.disabled = true;
-            select.appendChild(option);
+    const lista = agenda.gerarHorariosDoDia(data, duracao, barbeiro, agendamentos, {
+        config: {
+            abre: CONFIG.horario.abre,
+            fecha: CONFIG.horario.fecha,
+            sabadoAte: CONFIG.horario.sabadoAte,
+            intervaloMinutos: CONFIG.intervaloMinutos,
+            duracaoPadraoMinutos: CONFIG.intervaloMinutos
         }
+    });
+
+    select.innerHTML = '';
+
+    if (lista.length === 0) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'Fechado neste dia — escolha outra data';
+        select.appendChild(option);
+        return;
+    }
+
+    const primeira = document.createElement('option');
+    primeira.value = '';
+    primeira.textContent = 'Selecione um horário';
+    select.appendChild(primeira);
+
+    for (const slot of lista) {
+        const option = document.createElement('option');
+        option.value = slot.horario;
+        option.textContent = slot.disponivel ? slot.horario : `${slot.horario} (Indisponível)`;
+        if (!slot.disponivel) option.disabled = true;
+        select.appendChild(option);
     }
 }
 
@@ -117,6 +223,14 @@ function initOrcamento() {
 
     const cupomInput = document.getElementById('cupomInput');
     if (cupomInput) cupomInput.addEventListener('input', atualizarOrcamento);
+
+    // A duração dos serviços escolhidos muda os horários oferecidos.
+    document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+            const data = document.getElementById('dataAgendamento')?.value;
+            if (data) atualizarHorariosDisponiveis(data);
+        });
+    });
 }
 
 function atualizarOrcamento() {
@@ -134,9 +248,10 @@ function atualizarOrcamento() {
     checkboxes.forEach(cb => {
         const nome = cb.dataset.nome;
         const valor = parseFloat(cb.value);
+        if (!Number.isFinite(valor)) return;
         subtotal += valor;
         servicos.push(nome);
-        html += `<p>✓ ${nome} <span style="float:right">R$ ${valor.toFixed(2).replace('.', ',')}</span></p>`;
+        html += `<p>✓ ${seguro.escaparHtml(nome)} <span style="float:right">R$ ${valor.toFixed(2).replace('.', ',')}</span></p>`;
     });
 
     if (checkboxes.length === 0) html = '<p class="vazio">Nenhum serviço selecionado</p>';
@@ -150,35 +265,54 @@ function atualizarOrcamento() {
     desconto = subtotal * (percentual / 100);
 
     // Cupom
-    const cupomCodigo = document.getElementById('cupomInput')?.value.toUpperCase();
+    const cupomCodigoCru = document.getElementById('cupomInput')?.value.trim().toUpperCase() || '';
     const cupons = JSON.parse(localStorage.getItem('cupons') || '{}');
     let descontoCupom = 0;
     let textoCupom = '';
-    if (cupomCodigo && cupons[cupomCodigo]) {
-        const cupom = cupons[cupomCodigo];
-        if (cupom.ativo && (!cupom.validade || new Date(cupom.validade) > new Date())) {
-            if (cupom.tipo === 'percentual') {
-                descontoCupom = subtotal * (cupom.valor / 100);
-                textoCupom = `Cupom ${cupomCodigo} (-${cupom.valor}%)`;
-            } else {
-                descontoCupom = cupom.valor;
-                textoCupom = `Cupom ${cupomCodigo} (-R$ ${cupom.valor})`;
-            }
+    let cupomInvalido = false;
+
+    if (cupomCodigoCru) {
+        const cupom = Object.prototype.hasOwnProperty.call(cupons, cupomCodigoCru) ? cupons[cupomCodigoCru] : null;
+        const ativo = cupom && cupom.ativo && (!cupom.validade || new Date(cupom.validade) >= new Date(agenda.hojeLocal() + 'T00:00:00'));
+        const valor = cupom ? parseFloat(cupom.valor) : NaN;
+
+        if (!cupom) {
+            cupomInvalido = true;
+            textoCupom = `Cupom ${seguro.escaparHtml(cupomCodigoCru)} não encontrado`;
+        } else if (!ativo) {
+            cupomInvalido = true;
+            textoCupom = `Cupom ${seguro.escaparHtml(cupomCodigoCru)} expirado ou inativo`;
+        } else if (!Number.isFinite(valor) || valor <= 0) {
+            cupomInvalido = true;
+            textoCupom = `Cupom ${seguro.escaparHtml(cupomCodigoCru)} inválido`;
+        } else if (cupom.tipo === 'percentual') {
+            const pct = Math.min(valor, 100); // nunca mais de 100%
+            descontoCupom = subtotal * (pct / 100);
+            textoCupom = `Cupom ${seguro.escaparHtml(cupomCodigoCru)} (-${pct}%)`;
+        } else {
+            descontoCupom = valor;
+            textoCupom = `Cupom ${seguro.escaparHtml(cupomCodigoCru)} (-R$ ${valor.toFixed(2).replace('.', ',')})`;
         }
     }
 
-    const descontoTotal = desconto + descontoCupom;
-    const total = subtotal - descontoTotal;
+    const descontoBruto = desconto + descontoCupom;
+    // Nunca deixa o desconto passar do subtotal: sem isso, um cupom fixo de
+    // R$ 50 num servico de R$ 25 gerava total negativo ("-R$ 25,00").
+    const descontoTotal = Math.min(descontoBruto, subtotal);
+    const total = Math.max(0, subtotal - descontoTotal);
 
     lista.innerHTML = html;
     subtotalEl.textContent = `R$ ${subtotal.toFixed(2).replace('.', ',')}`;
 
-    if (descontoTotal > 0) {
+    if (descontoTotal > 0 || cupomInvalido) {
         linhaDesconto.style.display = 'flex';
         let descHtml = '';
         if (desconto > 0) descHtml += `<small>${textoDesconto}: -R$ ${desconto.toFixed(2).replace('.', ',')} (${percentual}%)<br></small>`;
         if (descontoCupom > 0) descHtml += `<small>${textoCupom}: -R$ ${descontoCupom.toFixed(2).replace('.', ',')}<br></small>`;
-        descontoEl.innerHTML = descHtml + `<strong>-R$ ${descontoTotal.toFixed(2).replace('.', ',')}</strong>`;
+        else if (cupomInvalido) descHtml += `<small>${textoCupom}<br></small>`;
+        if (descontoBruto > descontoTotal) descHtml += `<small>Desconto limitado ao valor dos serviços.</small>`;
+        descHtml += `<strong>-R$ ${descontoTotal.toFixed(2).replace('.', ',')}</strong>`;
+        descontoEl.innerHTML = descHtml;
     } else {
         linhaDesconto.style.display = 'none';
     }
@@ -187,7 +321,7 @@ function atualizarOrcamento() {
 
     localStorage.setItem('orcamentoAtual', JSON.stringify({
         servicos, subtotal, desconto, percentual,
-        descontoCupom, cupomCodigo, total
+        descontoCupom, cupomCodigo: cupomCodigoCru, total
     }));
 }
 
@@ -231,20 +365,72 @@ function initAgendamento() {
     }
 }
 
-function salvarAgendamento(e) {
+async function salvarAgendamento(e) {
     e.preventDefault();
+    const botao = e.target.querySelector('[type="submit"]');
+    if (botao.disabled) return;
+    botao.disabled = true;
+    try {
+        // Serializa o check + write entre abas da mesma origem quando Web
+        // Locks está disponível. Isso NÃO resolve concorrência entre aparelhos.
+        if (navigator.locks) {
+            await navigator.locks.request('barbados-agenda-local', () => salvarAgendamentoLocal(e));
+        } else {
+            salvarAgendamentoLocal(e);
+        }
+    } catch (erro) {
+        mostrarNotificacao('Não foi possível salvar neste navegador. Verifique o armazenamento e tente novamente.', '#dc3545');
+        console.error('Falha ao salvar simulação local:', erro);
+    } finally {
+        botao.disabled = false;
+    }
+}
+
+function salvarAgendamentoLocal(e) {
+    e.preventDefault();
+    if (!e.target.reportValidity()) return;
 
     const clienteLogado = JSON.parse(sessionStorage.getItem('clienteLogado') || 'null');
     const orcamento = JSON.parse(localStorage.getItem('orcamentoAtual') || 'null');
 
+    const data = document.getElementById('dataAgendamento').value;
+    const horario = document.getElementById('horarioAgendamento').value;
+    const barbeiro = document.getElementById('barbeiro').value;
+    const servicosTexto = document.getElementById('servicosAgendamento').value ||
+        (orcamento && orcamento.servicos && orcamento.servicos.length ? orcamento.servicos.join(' + ') : 'A definir');
+
+    if (!horario) {
+        mostrarNotificacao('Selecione um horário!', '#dc3545');
+        return;
+    }
+
+    if (!data) {
+        mostrarNotificacao('Selecione uma data!', '#dc3545');
+        return;
+    }
+
+    const diaSemana = agenda.diaDaSemana(data);
+    if (diaSemana === 0) {
+        mostrarNotificacao('Fechado aos domingos. Escolha outro dia.', '#dc3545');
+        atualizarHorariosDisponiveis(data);
+        return;
+    }
+
+    const duracao = duracaoDosServicos(
+        (orcamento && orcamento.servicos && orcamento.servicos.length)
+            ? orcamento.servicos
+            : servicosTexto
+    );
+
     const agendamento = {
         id: Date.now(),
-        nome: document.getElementById('nomeCliente').value,
-        telefone: document.getElementById('telefone').value,
-        data: document.getElementById('dataAgendamento').value,
-        horario: document.getElementById('horarioAgendamento').value,
-        barbeiro: document.getElementById('barbeiro').value,
-        servicos: document.getElementById('servicosAgendamento').value || 'A definir',
+        nome: document.getElementById('nomeCliente').value.trim(),
+        telefone: somenteDigitos(document.getElementById('telefone').value),
+        data,
+        horario,
+        barbeiro,
+        servicos: servicosTexto,
+        duracao,
         observacoes: document.getElementById('observacoes').value,
         status: 'confirmado',
         clienteId: clienteLogado?.id || null,
@@ -252,119 +438,103 @@ function salvarAgendamento(e) {
         criadoEm: new Date().toISOString()
     };
 
-    if (!agendamento.horario) {
-        mostrarNotificacao('Selecione um horário!', '#dc3545');
+    // Verifica conflito considerando duração, barbeiro específico e
+    // "Qualquer um". A regra vive em js/agenda.js (coberta por testes).
+    const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
+    const slot = agenda.gerarHorariosDoDia(data, duracao, barbeiro, agendamentos)
+        .find(item => item.horario === horario);
+    if (!slot?.disponivel) {
+        mostrarNotificacao('Horário indisponível ou fora do expediente. Escolha outro.', '#dc3545');
+        atualizarHorariosDisponiveis(data);
         return;
     }
-
-    // Verifica conflito
-    const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
-    const conflito = agendamentos.find(a =>
-        a.data === agendamento.data &&
-        a.horario === agendamento.horario &&
-        a.barbeiro === agendamento.barbeiro &&
-        a.status !== 'cancelado'
-    );
-
-    if (conflito) {
+    if (agenda.existeConflito(
+        { data: agendamento.data, horario: agendamento.horario, duracao: agendamento.duracao, barbeiro: agendamento.barbeiro },
+        agendamentos,
+        { duracaoPadraoMinutos: CONFIG.intervaloMinutos }
+    )) {
         mostrarNotificacao('Horário já ocupado! Escolha outro.', '#dc3545');
+        atualizarHorariosDisponiveis(data);
         return;
     }
 
     agendamentos.push(agendamento);
     localStorage.setItem('agendamentos', JSON.stringify(agendamentos));
 
-    // Adiciona pontos de primeiro agendamento
-    if (clienteLogado && !clienteLogado.primeiroAgendamento) {
-        adicionarPontos(clienteLogado.telefone, 20, 'Bônus primeiro agendamento');
-        clienteLogado.primeiroAgendamento = true;
-        sessionStorage.setItem('clienteLogado', JSON.stringify(clienteLogado));
-    }
+    // A simulação não comprova atendimento e não concede bônus de reserva.
+    let pontosGanhos = 0;
 
-    // Envia notificações
-    enviarNotificacaoWhatsApp(agendamento);
-    enviarConfirmacaoEmail(agendamento);
-    agendarLembrete(agendamento);
+    mostrarConfirmacaoCompleta(agendamento, pontosGanhos);
 
-    mostrarConfirmacaoCompleta(agendamento);
     e.target.reset();
     localStorage.removeItem('orcamentoAtual');
+    document.getElementById('horarioAgendamento').innerHTML = '<option value="">Selecione primeiro a data</option>';
+    atualizarOrcamento();
 }
 
-// === NOTIFICAÇÃO WHATSAPP ===
-function enviarNotificacaoWhatsApp(ag) {
+function somenteDigitos(valor) {
+    return String(valor || '').replace(/\D/g, '');
+}
+
+function registrarHistoricoPontos(clienteId, pontos, motivo) {
+    const historico = JSON.parse(localStorage.getItem('historicoPontos') || '[]');
+    historico.push({ clienteId, pontos, motivo, data: new Date().toISOString() });
+    localStorage.setItem('historicoPontos', JSON.stringify(historico));
+}
+
+// === WHATSAPP (abre conversa, não envia nada) ===
+function abrirConversaWhatsApp(ag, ganhouBonus) {
     const data = new Date(ag.data + 'T00:00:00').toLocaleDateString('pt-BR');
-    const msg = `✅ *Agendamento Confirmado!*\n\n` +
-        `Olá, *${ag.nome}*! Seu horário na Barbado's foi agendado.\n\n` +
-        `📅 *Data:* ${data}\n` +
-        `🕐 *Horário:* ${ag.horario}\n` +
-        `💈 *Serviços:* ${ag.servicos}\n` +
-        `👨‍💼 *Barbeiro:* ${ag.barbeiro}\n\n` +
-        `Nos vemos em breve! 💈`;
+    const msg = `Olá! Acabei de solicitar um horário pelo site da Barbado's.\n\n` +
+        `*Nome:* ${ag.nome}\n` +
+        `*Data:* ${data}\n` +
+        `*Horário:* ${ag.horario}\n` +
+        `*Serviços:* ${ag.servicos}\n` +
+        `*Barbeiro:* ${ag.barbeiro}\n\n` +
+        (ganhouBonus ? `(Pelo site eu também ganhei 20 pontos de boas-vindas.)\n\n` : '') +
+        `Pode confirmar, por favor?`;
 
     const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`;
     window.open(url, '_blank');
 }
 
-// === CONFIRMAÇÃO POR E-MAIL (simulada) ===
-function enviarConfirmacaoEmail(ag) {
-    const data = new Date(ag.data + 'T00:00:00').toLocaleDateString('pt-BR');
-    const emailLog = JSON.parse(localStorage.getItem('emailsEnviados') || '[]');
-    emailLog.push({
-        para: ag.nome,
-        telefone: ag.telefone,
-        assunto: 'Agendamento Confirmado - Barbado\'s Barbearia',
-        corpo: `Confirmação de agendamento para ${data} às ${ag.horario}`,
-        enviadoEm: new Date().toISOString()
-    });
-    localStorage.setItem('emailsEnviados', JSON.stringify(emailLog));
-}
-
-// === LEMBRETE AGENDADO ===
-function agendarLembrete(ag) {
-    // Lembretes são verificados no login do cliente
-    const lembretes = JSON.parse(localStorage.getItem('lembretes') || '[]');
-    const dataLembrete = new Date(ag.data + 'T00:00:00');
-    dataLembrete.setDate(dataLembrete.getDate() - 1);
-
-    lembretes.push({
-        agendamentoId: ag.id,
-        clienteNome: ag.nome,
-        clienteTelefone: ag.telefone,
-        dataLembrete: dataLembrete.toISOString(),
-        executado: false
-    });
-    localStorage.setItem('lembretes', JSON.stringify(lembretes));
-}
-
 // === MODAL DE CONFIRMAÇÃO ===
-function mostrarConfirmacaoCompleta(ag) {
+// O texto é deliberadamente honesto: o site NÃO confirma sozinho, NÃO manda
+// e-mail e NÃO agenda lembrete. Tudo isso era prometido antes (P0-4).
+function mostrarConfirmacaoCompleta(ag, pontosGanhos) {
     const data = new Date(ag.data + 'T00:00:00').toLocaleDateString('pt-BR');
     const modal = document.createElement('div');
     modal.className = 'modal-overlay active';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-labelledby', 'tituloConfirmacao');
     modal.innerHTML = `
         <div class="modal-content">
-            <div class="modal-icon">✓</div>
-            <h2>Agendamento Confirmado!</h2>
+            <div class="modal-icon" aria-hidden="true">✓</div>
+            <h2 id="tituloConfirmacao">Horário solicitado</h2>
             <div class="modal-info">
-                <p><strong>${data} às ${ag.horario}</strong></p>
-                <p>${ag.servicos}</p>
-                <p>Barbeiro: ${ag.barbeiro}</p>
+                <p><strong>${seguro.escaparHtml(data)} às ${seguro.escaparHtml(ag.horario)}</strong></p>
+                <p>${seguro.escaparHtml(ag.servicos)}</p>
+                <p>Barbeiro: ${seguro.escaparHtml(ag.barbeiro)}</p>
             </div>
+            ${pontosGanhos > 0 ? `
             <div class="modal-bonus">
-                <i class="fas fa-gift"></i>
-                <span>+20 pontos de bônus no seu primeiro agendamento!</span>
-            </div>
+                <i class="fas fa-gift" aria-hidden="true"></i>
+                <span>+20 pontos de boas-vindas na sua conta!</span>
+            </div>` : ''}
             <div class="modal-info-extra">
-                <p>📱 Você receberá um lembrete via WhatsApp 24h antes</p>
-                <p>📧 Confirmação enviada por e-mail</p>
+                <p><strong>Importante:</strong> este é um site de demonstração.</p>
+                <p>O pedido foi registrado apenas <strong>neste navegador</strong>. Nenhum e-mail ou lembrete automático foi enviado.</p>
+                <p>Nenhum horário real foi reservado e nenhum contato externo foi aberto.</p>
             </div>
-            <button class="btn btn-primary btn-block" onclick="this.closest('.modal-overlay').remove()">Entendi!</button>
+            <button class="btn btn-primary btn-block" onclick="this.closest('.modal-overlay').remove()">Entendi</button>
         </div>
     `;
     document.body.appendChild(modal);
 
-    // Toca som de sucesso
+    const botao = modal.querySelector('button');
+    if (botao) botao.focus();
+
     tocarSomSucesso();
 }
 
@@ -380,23 +550,17 @@ function tocarSomSucesso() {
         gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
         oscillator.start(audioCtx.currentTime);
         oscillator.stop(audioCtx.currentTime + 0.5);
-    } catch (e) {}
+    } catch (e) { /* som é opcional */ }
 }
 
 // === PONTOS ===
 function adicionarPontos(telefone, pontos, motivo) {
     const clientes = JSON.parse(localStorage.getItem('clientesConta') || '[]');
-    const idx = clientes.findIndex(c => c.telefone === telefone);
+    const alvo = somenteDigitos(telefone);
+    const idx = clientes.findIndex(c => c.telefone === alvo);
     if (idx >= 0) {
         clientes[idx].pontos = (clientes[idx].pontos || 0) + pontos;
-        const historico = JSON.parse(localStorage.getItem('historicoPontos') || '[]');
-        historico.push({
-            clienteId: clientes[idx].id,
-            pontos,
-            motivo,
-            data: new Date().toISOString()
-        });
-        localStorage.setItem('historicoPontos', JSON.stringify(historico));
+        registrarHistoricoPontos(clientes[idx].id, pontos, motivo);
         localStorage.setItem('clientesConta', JSON.stringify(clientes));
     }
 }
@@ -406,25 +570,33 @@ function initAvaliacao() {
     const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes') || '[]');
     const container = document.getElementById('depoimentosDinamicos');
     if (container && avaliacoes.length > 0) {
-        container.innerHTML = avaliacoes.slice(-3).reverse().map(av => `
+        // Escapa nome e comentário (P0-1) e limita a nota a 1..5.
+        container.innerHTML = avaliacoes.slice(-3).reverse().map(av => {
+            const nota = seguro.inteiroLimitado(av.nota, 1, 5, 5);
+            return `
             <div class="depoimento">
-                <div class="estrelas">${'★'.repeat(av.nota)}${'☆'.repeat(5 - av.nota)}</div>
-                <p>"${av.comentario}"</p>
-                <strong>- ${av.nome}</strong>
-            </div>
-        `).join('');
+                <div class="estrelas">${'★'.repeat(nota)}${'☆'.repeat(5 - nota)}</div>
+                <p>"${seguro.escaparHtml(av.comentario)}"</p>
+                <strong>- ${seguro.escaparHtml(av.nome)}</strong>
+            </div>`;
+        }).join('');
     }
 }
 
-window.abrirAvaliacao = function(agendamentoId) {
-    const nota = prompt('Avalie nosso serviço de 1 a 5 estrelas:');
-    if (!nota) return;
+window.abrirAvaliacao = function (agendamentoId) {
+    const notaCrua = prompt('Avalie nosso serviço de 1 a 5 estrelas:');
+    if (!notaCrua) return;
+    const nota = seguro.inteiroLimitado(notaCrua, 1, 5, NaN);
+    if (!Number.isFinite(nota)) {
+        mostrarNotificacao('Nota deve ser entre 1 e 5!', '#dc3545');
+        return;
+    }
     const comentario = prompt('Deixe um comentário (opcional):') || '';
 
     const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes') || '[]');
     avaliacoes.push({
         agendamentoId,
-        nota: parseInt(nota),
+        nota,
         comentario,
         nome: 'Cliente',
         data: new Date().toISOString()
@@ -440,24 +612,24 @@ function initChatWidget() {
     const widget = document.createElement('div');
     widget.id = 'chatWidget';
     widget.innerHTML = `
-        <button id="chatToggle" class="chat-toggle" title="Fale conosco">
-            <i class="fab fa-whatsapp"></i>
+        <button id="chatToggle" class="chat-toggle" aria-label="Abrir conversa no WhatsApp" aria-expanded="false" aria-controls="chatBox">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
         </button>
         <div id="chatBox" class="chat-box hidden">
             <div class="chat-header">
                 <strong>💬 Fale com a Barbado's</strong>
-                <button onclick="toggleChat()" class="chat-close">×</button>
+                <button onclick="toggleChat()" class="chat-close" aria-label="Fechar conversa">×</button>
             </div>
             <div class="chat-body">
                 <p>Olá! 👋 Como podemos te atender?</p>
                 <button onclick="abrirWhatsApp('Olá! Gostaria de agendar um horário')" class="chat-option">
-                    <i class="far fa-calendar"></i> Agendar horário
+                    <i class="far fa-calendar" aria-hidden="true"></i> Agendar horário
                 </button>
                 <button onclick="abrirWhatsApp('Olá! Gostaria de saber os preços')" class="chat-option">
-                    <i class="fas fa-dollar-sign"></i> Ver preços
+                    <i class="fas fa-dollar-sign" aria-hidden="true"></i> Ver preços
                 </button>
                 <button onclick="abrirWhatsApp('Olá! Gostaria de falar com um atendente')" class="chat-option">
-                    <i class="fas fa-headset"></i> Falar com atendente
+                    <i class="fas fa-headset" aria-hidden="true"></i> Falar com atendente
                 </button>
             </div>
         </div>
@@ -467,25 +639,30 @@ function initChatWidget() {
     document.getElementById('chatToggle').addEventListener('click', toggleChat);
 }
 
-window.toggleChat = function() {
-    document.getElementById('chatBox').classList.toggle('hidden');
+window.toggleChat = function () {
+    const caixa = document.getElementById('chatBox');
+    const botao = document.getElementById('chatToggle');
+    if (!caixa) return;
+    const escondida = caixa.classList.toggle('hidden');
+    if (botao) botao.setAttribute('aria-expanded', String(!escondida));
 };
 
-window.abrirWhatsApp = function(msg) {
-    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+window.abrirWhatsApp = function (msg) {
+    window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
     toggleChat();
 };
 
 // === PWA - INSTALÁVEL ===
 function initPWA() {
-    // Registrar Service Worker
+    // Registra o Service Worker com caminho RELATIVO, para funcionar tanto na
+    // raiz quanto em subpasta (GitHub Pages). Antes era '/service-worker.js',
+    // que falha em /<repo>/ e quebrava o modo offline (P0-5).
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/service-worker.js')
+        navigator.serviceWorker.register('service-worker.js')
             .then(reg => {
-                console.log('[PWA] Service Worker registrado:', reg.scope);
-                // Verifica updates
                 reg.addEventListener('updatefound', () => {
                     const newWorker = reg.installing;
+                    if (!newWorker) return;
                     newWorker.addEventListener('statechange', () => {
                         if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                             mostrarNotificacao('Nova versão disponível! Atualize a página.', '#ffc107');
@@ -528,7 +705,7 @@ function initPWA() {
     }
 }
 
-window.installPWA = function() {
+window.installPWA = function () {
     if (window._deferredPrompt) {
         window._deferredPrompt.prompt();
         window._deferredPrompt.userChoice.then(() => {
@@ -540,9 +717,11 @@ window.installPWA = function() {
 
 // Atualiza SW quando disponível
 if ('serviceWorker' in navigator) {
+    const tinhaControlador = Boolean(navigator.serviceWorker.controller);
     let refreshing = false;
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-        if (refreshing) return;
+        // A primeira instalação não deve interromper um formulário em uso.
+        if (!tinhaControlador || refreshing) return;
         refreshing = true;
         window.location.reload();
     });
@@ -552,7 +731,8 @@ if ('serviceWorker' in navigator) {
 function mostrarNotificacao(mensagem, cor = '#28a745') {
     const div = document.createElement('div');
     div.className = 'notificacao';
-    div.innerHTML = `<i class="fas fa-check-circle"></i> ${mensagem}`;
+    div.setAttribute('role', 'status');
+    div.innerHTML = `<i class="fas fa-check-circle" aria-hidden="true"></i> ${seguro.escaparHtml(mensagem)}`;
     div.style.background = cor;
     document.body.appendChild(div);
     setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 4000);
@@ -565,7 +745,10 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         if (href !== '#' && document.querySelector(href)) {
             e.preventDefault();
             document.querySelector(href).scrollIntoView({ behavior: 'smooth' });
-            document.querySelector('.nav-menu')?.classList.remove('active');
+            const menu = document.querySelector('.nav-menu');
+            if (menu) menu.classList.remove('active');
+            const hamburger = document.querySelector('.hamburger');
+            if (hamburger) hamburger.setAttribute('aria-expanded', 'false');
         }
     });
 });
