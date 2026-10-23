@@ -1,0 +1,413 @@
+{
+  "generatedAt": "2026-10-22T20:58:44.742Z",
+  "checks": [
+    "heroSelectsActualService",
+    "catalogSelectionUpdatesBudget",
+    "serviceSummaryIsReadonly",
+    "invalidCouponInline",
+    "mobileMenuExpanded",
+    "mobileMenuEscape",
+    "nativeFaqOpens",
+    "loginRequiredInlineError",
+    "passwordReveal",
+    "wrongCredentialsDoNotLogin",
+    "passwordMismatchInline",
+    "signupBusyDuringRealHash",
+    "sessionContainsNoPassword",
+    "emptyProfileNameRejected",
+    "slotButtonUpdatesNativeSelect",
+    "honestAccessibleConfirmation",
+    "nativeDialogTrapsFocus",
+    "confirmationEscapeAndFocus",
+    "adminDrawerInertsBackground",
+    "adminDrawerClosesOnNavigation",
+    "adminNativeFormDialog",
+    "couponPercentageInlineError",
+    "concludeIdempotentInDemo",
+    "reviewDialogSavesLocally"
+  ],
+  "accessibility": [
+    {
+      "page": "confirmation",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "home",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "login",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "cadastro",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "conta",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "admin",
+      "theme": "dark",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "home",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "login",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "cadastro",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "conta",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "admin",
+      "theme": "dark",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "home",
+      "theme": "light",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "login",
+      "theme": "light",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "cadastro",
+      "theme": "light",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "conta",
+      "theme": "light",
+      "width": 390,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d4a574",
+                    "bgColor": "#fdfdfb",
+                    "contrastRatio": 2.18,
+                    "fontSize": "9.0pt (12px)",
+                    "fontWeight": "bold",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<section id=\"historico\" class=\"dashboard-section\">",
+                      "target": [
+                        "#historico"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 2.18 (foreground color: #d4a574, background color: #fdfdfb, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<span style=\"color:var(--primary); font-weight:bold;\">+10 pts</span>",
+              "target": [
+                ".visita-item > span"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.18 (foreground color: #d4a574, background color: #fdfdfb, font size: 9.0pt (12px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "admin",
+      "theme": "light",
+      "width": 390,
+      "violations": []
+    },
+    {
+      "page": "home",
+      "theme": "light",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "login",
+      "theme": "light",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "cadastro",
+      "theme": "light",
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "page": "conta",
+      "theme": "light",
+      "width": 1440,
+      "violations": [
+        {
+          "id": "color-contrast",
+          "impact": "serious",
+          "tags": [
+            "cat.color",
+            "wcag2aa",
+            "wcag143",
+            "TTv5",
+            "TT13.c",
+            "EN-301-549",
+            "EN-9.1.4.3",
+            "ACT",
+            "RGAAv4",
+            "RGAA-3.2.1"
+          ],
+          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
+          "help": "Elements must meet minimum color contrast ratio thresholds",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.14/color-contrast?application=playwright",
+          "nodes": [
+            {
+              "any": [
+                {
+                  "id": "color-contrast",
+                  "data": {
+                    "fgColor": "#d4a574",
+                    "bgColor": "#fdfdfb",
+                    "contrastRatio": 2.18,
+                    "fontSize": "11.3pt (15px)",
+                    "fontWeight": "bold",
+                    "messageKey": null,
+                    "expectedContrastRatio": "4.5:1"
+                  },
+                  "relatedNodes": [
+                    {
+                      "html": "<section id=\"historico\" class=\"dashboard-section\">",
+                      "target": [
+                        "#historico"
+                      ]
+                    }
+                  ],
+                  "impact": "serious",
+                  "message": "Element has insufficient color contrast of 2.18 (foreground color: #d4a574, background color: #fdfdfb, font size: 11.3pt (15px), font weight: bold). Expected contrast ratio of 4.5:1"
+                }
+              ],
+              "all": [],
+              "none": [],
+              "impact": "serious",
+              "html": "<span style=\"color:var(--primary); font-weight:bold;\">+10 pts</span>",
+              "target": [
+                ".visita-item > span"
+              ],
+              "failureSummary": "Fix any of the following:\n  Element has insufficient color contrast of 2.18 (foreground color: #d4a574, background color: #fdfdfb, font size: 11.3pt (15px), font weight: bold). Expected contrast ratio of 4.5:1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": "admin",
+      "theme": "light",
+      "width": 1440,
+      "violations": []
+    }
+  ],
+  "layouts": [
+    {
+      "page": "home",
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "login",
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "cadastro",
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "conta",
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "admin",
+      "theme": "dark",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "home",
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "login",
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "cadastro",
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "conta",
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "admin",
+      "theme": "dark",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "home",
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "login",
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "cadastro",
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "conta",
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "admin",
+      "theme": "light",
+      "width": 390,
+      "scroll": 390,
+      "imagesLoaded": true
+    },
+    {
+      "page": "home",
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "login",
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "cadastro",
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "conta",
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    },
+    {
+      "page": "admin",
+      "theme": "light",
+      "width": 1440,
+      "scroll": 1440,
+      "imagesLoaded": true
+    }
+  ],
+  "errors": [],
+  "failedLocalRequests": []
+}
