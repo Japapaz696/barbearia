@@ -1,0 +1,16 @@
+[
+  {
+    "base": "http://127.0.0.1:8080/",
+    "scope": "http://127.0.0.1:8080/",
+    "unrelatedPreserved": true,
+    "controlled": true,
+    "offlinePages": 4
+  },
+  {
+    "base": "http://127.0.0.1:8081/barbearia-p0/",
+    "scope": "http://127.0.0.1:8081/barbearia-p0/",
+    "unrelatedPreserved": true,
+    "controlled": true,
+    "offlinePages": 4
+  }
+]

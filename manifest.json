@@ -1,94 +1,19 @@
 {
-    "name": "Barbado's Barbearia",
+    "id": "./",
+    "name": "Barbado's Barbearia · Demo",
     "short_name": "Barbado's",
-    "description": "Tradição, estilo e atitude. Agende seu horário na melhor barbearia de BH!",
-    "start_url": "/index.html",
+    "description": "Demonstração de portfólio com orçamento e simulação local de agendamento.",
+    "start_url": "./index.html",
     "display": "standalone",
-    "background_color": "#1a1a1a",
-    "theme_color": "#d4a574",
-    "orientation": "portrait-primary",
-    "scope": "/",
+    "background_color": "#171819",
+    "theme_color": "#171819",
+    "scope": "./",
     "lang": "pt-BR",
-    "icons": [
-        {
-            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✂️</text></svg>",
-            "sizes": "any",
-            "type": "image/svg+xml",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-72.png",
-            "sizes": "72x72",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-96.png",
-            "sizes": "96x96",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-128.png",
-            "sizes": "128x128",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-144.png",
-            "sizes": "144x144",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-152.png",
-            "sizes": "152x152",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-192.png",
-            "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
-        },
-        {
-            "src": "icons/icon-384.png",
-            "sizes": "384x384",
-            "type": "image/png",
-            "purpose": "any"
-        },
-        {
-            "src": "icons/icon-512.png",
-            "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
-        }
-    ],
-    "categories": ["lifestyle", "business", "health"],
+    "icons": [{ "src": "assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }],
+    "categories": ["lifestyle", "business"],
     "shortcuts": [
-        {
-            "name": "Agendar Horário",
-            "short_name": "Agendar",
-            "description": "Faça um novo agendamento",
-            "url": "/index.html#agendamento",
-            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
-        },
-        {
-            "name": "Ver Orçamento",
-            "short_name": "Orçamento",
-            "description": "Calcule seu orçamento",
-            "url": "/index.html#orcamento",
-            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
-        },
-        {
-            "name": "WhatsApp",
-            "short_name": "WhatsApp",
-            "description": "Fale conosco no WhatsApp",
-            "url": "https://wa.me/553125160233",
-            "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
-        }
+        { "name": "Simular horário", "short_name": "Simular", "url": "./index.html#orcamento" },
+        { "name": "Minha conta local", "short_name": "Conta", "url": "./cliente/login.html" }
     ],
-    "screenshots": [],
     "prefer_related_applications": false
 }

@@ -1,4 +1,11 @@
 // === DASHBOARD DO CLIENTE ===
+const escapar = window.seguranca.escaparHtml;
+const argumento = window.seguranca.jsonParaAtributo;
+
+function logout() {
+    sessionStorage.removeItem('clienteLogado');
+    window.location.href = 'login.html';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     // Verifica login
@@ -31,10 +38,11 @@ function carregarDashboard(cliente) {
     const progresso = ((clienteAtual.visitas || 0) % 10) * 10;
     document.getElementById('progressFill').style.width = `${progresso}%`;
     document.getElementById('progressPercent').textContent = `${progresso}%`;
+    document.getElementById('progressBar')?.setAttribute('aria-valuenow', String(progresso));
 
     // Próximo brinde
     if (progresso === 0 && (clienteAtual.visitas || 0) > 0) {
-        document.querySelector('.progress-text').innerHTML = '🎉 <strong>Você ganhou um corte grátis! Fale com o barbeiro!</strong>';
+        document.querySelector('.progress-text').textContent = 'Meta demonstrativa alcançada. Nenhum serviço real foi resgatado.';
     }
 }
 
@@ -50,10 +58,10 @@ function carregarAgendamentos(cliente) {
     if (meusAgendamentos.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <i class="far fa-calendar" style="font-size:48px; color:var(--primary); margin-bottom:15px; display:block;"></i>
-                Nenhum agendamento encontrado
-                <br><br>
-                <a href="../index.html#agendamento" class="btn btn-primary">Agendar Agora</a>
+                <i class="far fa-calendar" aria-hidden="true"></i>
+                <h3>Seu próximo cuidado começa aqui.</h3>
+                <p>Você ainda não tem simulações neste navegador. Escolha um serviço para experimentar.</p>
+                <a href="../index.html#orcamento" class="btn btn-secondary">Simular horário</a>
             </div>
         `;
         return;
@@ -67,18 +75,18 @@ function carregarAgendamentos(cliente) {
         return `
             <div class="agendamento-item">
                 <div class="agendamento-info">
-                    <h4>${a.servicos || 'Serviço não informado'}</h4>
-                    <p><i class="far fa-calendar"></i> ${data} às ${a.horario}</p>
-                    <p><i class="fas fa-user"></i> Barbeiro: ${a.barbeiro || 'Não definido'}</p>
-                    ${a.observacoes ? `<p><em>${a.observacoes}</em></p>` : ''}
+                    <h4>${escapar(a.servicos || 'Serviço não informado')}</h4>
+                    <p><i class="far fa-calendar"></i> ${data} às ${escapar(a.horario)}</p>
+                    <p><i class="fas fa-user"></i> Barbeiro: ${escapar(a.barbeiro || 'Não definido')}</p>
+                    ${a.observacoes ? `<p><em>${escapar(a.observacoes)}</em></p>` : ''}
                     ${podeAvaliar ? `
                         <button class="btn btn-primary" style="margin-top:10px; padding:8px 16px; font-size:13px;"
-                                onclick="abrirAvaliacao(${a.id})">
+                                onclick="abrirAvaliacao(${argumento(a.id)})">
                             <i class="fas fa-star"></i> Avaliar este atendimento
                         </button>
                     ` : ''}
                 </div>
-                <span class="status-badge status-${status}">${status}</span>
+                <span class="status-badge status-${escapar(status)}">${escapar(status === 'confirmado' ? 'registro local' : status)}</span>
             </div>
         `;
     }).join('');
@@ -94,21 +102,21 @@ function carregarHistorico(cliente) {
     const container = document.getElementById('historicoVisitas');
 
     if (historico.length === 0) {
-        container.innerHTML = '<p class="empty-state">Nenhuma visita registrada ainda</p>';
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-history" aria-hidden="true"></i><h3>Sua história está começando.</h3><p>Atendimentos marcados como concluídos na demo aparecerão aqui.</p></div>';
         return;
     }
 
     container.innerHTML = historico.map(h => {
         const data = new Date(h.data + 'T00:00:00').toLocaleDateString('pt-BR');
-        const avaliado = h.avaliado ? '<span style="color:#ffc107;">⭐ Avaliado</span>' : '<span style="color:var(--gray);">Não avaliado</span>';
+        const avaliado = h.avaliado ? '<span class="review-label">Avaliado na demo</span>' : '<span>Não avaliado</span>';
         return `
             <div class="visita-item">
                 <div class="visita-info">
-                    <h4>${h.servicos || 'Serviço'}</h4>
-                    <p><i class="far fa-calendar"></i> ${data} às ${h.horario} · ${avaliado}</p>
-                    <p><i class="fas fa-user"></i> ${h.barbeiro || 'Barbeiro'}</p>
+                    <h4>${escapar(h.servicos || 'Serviço')}</h4>
+                    <p><i class="far fa-calendar"></i> ${data} às ${escapar(h.horario)} · ${avaliado}</p>
+                    <p><i class="fas fa-user"></i> ${escapar(h.barbeiro || 'Barbeiro')}</p>
                 </div>
-                <span style="color:var(--primary); font-weight:bold;">+10 pts</span>
+                <span class="visit-points">+10 pts</span>
             </div>
         `;
     }).join('');
@@ -131,11 +139,22 @@ if (formAtualizar) {
 
         const clientes = JSON.parse(localStorage.getItem('clientesConta') || '[]');
         const idx = clientes.findIndex(c => c.id === cliente.id);
+        const nome = document.getElementById('editNome').value.trim();
+        const telefone = document.getElementById('editTelefone').value.replace(/\D/g, '');
+        const email = document.getElementById('editEmail').value.trim().toLowerCase();
+        if (!nome || !/^\d{10,11}$/.test(telefone) || !formAtualizar.reportValidity()) {
+            window.interfaceBarbados.erroFormulario(formAtualizar, 'Informe nome, e-mail e telefone de teste com DDD (10 ou 11 dígitos).');
+            return;
+        }
+        if (clientes.some(c => c.id !== cliente.id && (c.telefone === telefone || c.email?.toLowerCase() === email))) {
+            window.interfaceBarbados.erroFormulario(formAtualizar, 'Este telefone ou e-mail já pertence a outra conta local.');
+            return;
+        }
 
         if (idx >= 0) {
-            clientes[idx].nome = document.getElementById('editNome').value;
-            clientes[idx].telefone = document.getElementById('editTelefone').value;
-            clientes[idx].email = document.getElementById('editEmail').value;
+            clientes[idx].nome = nome;
+            clientes[idx].telefone = telefone;
+            clientes[idx].email = email;
 
             localStorage.setItem('clientesConta', JSON.stringify(clientes));
 
@@ -143,7 +162,8 @@ if (formAtualizar) {
             const { senha: _, ...clienteSeguro } = clientes[idx];
             sessionStorage.setItem('clienteLogado', JSON.stringify(clienteSeguro));
 
-            mostrarNotificacao('Dados atualizados com sucesso!');
+            window.interfaceBarbados.erroFormulario(formAtualizar, '');
+            mostrarNotificacao('Dados atualizados neste navegador.');
             carregarDashboard(clientes[idx]);
         }
     });
@@ -164,21 +184,19 @@ window.mostrarIndiqueGanhe = function() {
             <div class="modal-icon" style="background:#17a2b8;"><i class="fas fa-users"></i></div>
             <h2>Indique e Ganhe 🎁</h2>
             <div class="modal-info" style="text-align:left; background:linear-gradient(135deg,#e7f3ff,#fff);">
-                <p><strong>Seu código:</strong> <span style="font-family:monospace; background:var(--primary); color:var(--secondary); padding:4px 12px; border-radius:6px;">${codigoIndicacao}</span></p>
+                <p><strong>Seu código:</strong> <span style="font-family:monospace; background:var(--primary); color:var(--secondary); padding:4px 12px; border-radius:6px;">${escapar(codigoIndicacao)}</span></p>
                 <p><strong>Seu link:</strong></p>
-                <div style="background:white; padding:10px; border-radius:6px; font-size:12px; word-break:break-all; border:1px solid var(--border);">${linkIndicacao}</div>
+                <div style="background:white; padding:10px; border-radius:6px; font-size:12px; word-break:break-all; border:1px solid var(--border);">${escapar(linkIndicacao)}</div>
                 <hr style="margin:15px 0;">
                 <p><strong>Como funciona:</strong></p>
                 <ul style="margin-left:20px; line-height:1.8;">
                     <li>Compartilhe seu código ou link com amigos</li>
-                    <li>Quando eles se cadastrarem e fizerem o 1º agendamento, <strong>você ganha 50 pontos!</strong></li>
-                    <li>Seu amigo ganha <strong>10% OFF</strong> no primeiro agendamento</li>
-                    <li>Sem limite de indicações!</li>
+                    <li>Recurso planejado: este link ainda não atribui indicações nem concede bônus.</li>
                 </ul>
             </div>
             <div class="modal-actions" style="display:flex; gap:10px; justify-content:center; margin-top:20px;">
-                <button class="btn btn-primary" onclick="copiarLink('${linkIndicacao}')"><i class="fas fa-copy"></i> Copiar Link</button>
-                <button class="btn btn-secondary" onclick="compartilharWhats('${linkIndicacao}')"><i class="fab fa-whatsapp"></i> WhatsApp</button>
+                <button class="btn btn-primary" onclick="copiarLink(${argumento(linkIndicacao)})"><i class="fas fa-copy"></i> Copiar Link</button>
+                <button class="btn btn-secondary" onclick="compartilharWhats(${argumento(linkIndicacao)})"><i class="fab fa-whatsapp"></i> WhatsApp</button>
             </div>
             <button class="btn btn-block" onclick="this.closest('.modal-overlay').remove()" style="margin-top:15px; background:transparent; color:var(--gray);">Fechar</button>
         </div>
@@ -193,21 +211,21 @@ window.copiarLink = function(link) {
 };
 
 window.compartilharWhats = function(link) {
-    const msg = `💈 Venha conhecer a Barbado's Barbearia! Use meu link e ganhe 10% OFF no primeiro agendamento: ${link}`;
+    const msg = `Demonstração da Barbado's Barbearia (indicações ainda não implementadas): ${link}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 };
 
 // === VERIFICAR LEMBRETES ===
 function verificarLembretes(cliente) {
     const lembretes = JSON.parse(localStorage.getItem('lembretes') || '[]');
-    const meusLembretes = lembretes.filter(l => l.clienteTelefone === cliente.telefone && !l.executado);
+    const meusLembretes = lembretes.filter(l => l.clienteTelefone === cliente.telefone && !l.executado && new Date(l.dataLembrete) <= new Date());
 
     if (meusLembretes.length > 0) {
         setTimeout(() => {
             meusLembretes.forEach(l => {
                 const agendamentos = JSON.parse(localStorage.getItem('agendamentos') || '[]');
                 const ag = agendamentos.find(a => a.id === l.agendamentoId);
-                if (ag && ag.status === 'confirmado') {
+                if (ag && ag.status === 'confirmado' && new Date(ag.data + 'T' + ag.horario) > new Date()) {
                     const data = new Date(ag.data + 'T00:00:00').toLocaleDateString('pt-BR');
                     const modal = document.createElement('div');
                     modal.className = 'modal-overlay active';
@@ -216,9 +234,9 @@ function verificarLembretes(cliente) {
                             <div class="modal-icon" style="background:#ffc107; color:#333;"><i class="fas fa-bell"></i></div>
                             <h2>Lembrete de Agendamento</h2>
                             <div class="modal-info">
-                                <p>Olá <strong>${cliente.nome.split(' ')[0]}</strong>!</p>
-                                <p>Você tem agendamento <strong>amanhã (${data}) às ${ag.horario}</strong></p>
-                                <p>Serviço: ${ag.servicos}</p>
+                                <p>Olá <strong>${escapar(cliente.nome.split(' ')[0])}</strong>!</p>
+                                <p>Registro local de demonstração: <strong>${data} às ${escapar(ag.horario)}</strong></p>
+                                <p>Serviço: ${escapar(ag.servicos)}</p>
                             </div>
                             <button class="btn btn-primary btn-block" onclick="this.closest('.modal-overlay').remove()">Entendi!</button>
                         </div>
@@ -236,13 +254,19 @@ function verificarLembretes(cliente) {
 
 // === AVALIAÇÃO (função global) ===
 window.abrirAvaliacao = function(agendamentoId) {
-    const nota = prompt('Avalie nosso serviço de 1 a 5 estrelas:');
-    if (!nota || nota < 1 || nota > 5) {
-        if (nota) mostrarNotificacao('Nota deve ser entre 1 e 5!', '#dc3545');
-        return;
-    }
+    const cliente = JSON.parse(sessionStorage.getItem('clienteLogado') || 'null');
+    const agendamento = JSON.parse(localStorage.getItem('agendamentos') || '[]').find(a => a.id === agendamentoId);
+    if (!cliente || !agendamento || agendamento.status !== 'concluido' || agendamento.avaliado ||
+        !(agendamento.clienteId === cliente.id || agendamento.telefone === cliente.telefone)) return;
+    window.interfaceBarbados.formularioDialogo('Avaliar a experiência da demo', [
+        { name: 'nota', label: 'Sua nota de teste', required: true, value: '5', options: [5, 4, 3, 2, 1].map(n => ({ value: String(n), label: `${n} de 5 estrelas` })) },
+        { name: 'comentario', label: 'Comentário de teste (opcional)', type: 'textarea', maxLength: 500 }
+    ], values => salvarAvaliacaoLocal(agendamentoId, Number(values.nota), values.comentario));
+};
 
-    const comentario = prompt('Deixe um comentário (opcional):') || '';
+function salvarAvaliacaoLocal(agendamentoId, nota, comentario) {
+    const atual = JSON.parse(localStorage.getItem('agendamentos') || '[]').find(a => a.id === agendamentoId);
+    if (!atual || atual.avaliado) return 'Este registro já foi avaliado nesta demo.';
 
     const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes') || '[]');
     const cliente = JSON.parse(sessionStorage.getItem('clienteLogado') || 'null');
@@ -291,14 +315,14 @@ window.abrirAvaliacao = function(agendamentoId) {
     mostrarNotificacao('Obrigado pela avaliação! +5 pontos ⭐', '#ffc107');
     carregarAgendamentos(JSON.parse(sessionStorage.getItem('clienteLogado') || 'null'));
     carregarHistorico(JSON.parse(sessionStorage.getItem('clienteLogado') || 'null'));
-};
+}
 
 // === NOTIFICAÇÃO ===
 function mostrarNotificacao(mensagem, cor = '#28a745') {
     const div = document.createElement('div');
     div.className = 'notificacao';
-    div.innerHTML = `<i class="fas fa-check-circle"></i> ${mensagem}`;
-    div.style.background = cor;
+    div.setAttribute('role', 'status');
+    div.textContent = mensagem;
     document.body.appendChild(div);
     setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 4000);
 }

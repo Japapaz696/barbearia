@@ -1,229 +1,90 @@
-# 💈 Barbado's Barbearia - Site Completo Profissional
+# Barbado's Barbearia — demonstração estática
 
-Site profissional completo para a **Barbado's Barbearia** com sistema de agendamento, orçamento online, área do cliente, painel administrativo e recursos avançados.
+Protótipo de portfólio com orçamento, simulação de agenda, área do cliente e painel administrativo local. **Não é um sistema de produção. Use apenas dados fictícios e senha exclusiva de teste.**
 
-## 📋 Informações do Negócio
-- **Nome:** Barbado's Barbearia
-- **Instagram:** [@barbadosbarbershop1.0](https://instagram.com/barbadosbarbershop1.0)
-- **Endereço:** Rua Sena Madureira, 516 - Belo Horizonte, MG
-- **Telefone:** (31) 2516-0233
-- **Horário:** Seg-Sex 9h-20h | Sáb 9h-18h
+## Redesign P1
 
-## 🚀 Como Usar
+Identidade preto/carvão e dourado preservada, tipografia e fotografias locais, dois temas, catálogo selecionável, orçamento conectado à seleção, atalhos de horário acessíveis, formulários com erros inline e painéis unificados. Nenhuma dependência de frontend ou backend foi adicionada. Fontes e ícones incluem suas licenças em `assets/`.
 
-### 1. Abrir o Site
-Dê duplo clique em `index.html` ou abra no navegador. Para testar o Service Worker/PWA, use um servidor local:
+- [Comparação visual antes/depois](docs/p1/comparacao.html)
+- [Relatório da fase P1](docs/p1/relatorio.md)
+- [Capturas e resultados finais](docs/p1/final/)
 
-```bash
-# Python
-python -m http.server 8000
+## Limites importantes
 
-# Node.js
-npx serve .
+- Os dados ficam no `localStorage` do navegador. Não existe backend, banco central ou sincronização entre aparelhos.
+- A sessão fica no `sessionStorage` da aba. PBKDF2 no cliente reduz a exposição da senha original, mas **não é autenticação de servidor**.
+- O painel administrativo **não tem autenticação nem autorização real**. Ele acessa os dados locais da mesma origem.
+- Salvar uma simulação não confirma reserva real, não envia e-mail, não dispara lembretes, não efetua pagamento e não contata WhatsApp automaticamente.
+- O programa de indicações não está implementado. Pontos e cupons são demonstrativos, sem valor comercial.
+- Imagens e depoimentos iniciais são ilustrativos. Informações comerciais fornecidas no projeto precisam de validação antes de uso público.
 
-# PHP
-php -S localhost:8000
+## Executar
+
+Na pasta do projeto:
+
+```sh
+python -m http.server 8080 --bind 127.0.0.1
 ```
 
-### 2. Páginas Disponíveis
-- **Site principal** (`index.html`) - Página inicial com todas as funcionalidades
-- **Login cliente** (`cliente/login.html`) - Área do cliente
-- **Cadastro** (`cliente/cadastro.html`) - Criar conta (10% OFF no 1º agendamento)
-- **Dashboard cliente** (`cliente/dashboard.html`) - Ver agendamentos, pontos, histórico, Indique e Ganhe
-- **Painel admin** (`admin/index.html`) - Gerenciar tudo
-- **Política de Privacidade** (`politica-privacidade.html`) - LGPD completa
+Abra `http://127.0.0.1:8080/`. Não use `file://` para testar Service Worker, armazenamento ou Web Crypto.
 
-## ✨ Funcionalidades Completas
+| Página | Caminho |
+| --- | --- |
+| Site e simulação | `index.html` |
+| Cadastro / login | `cliente/cadastro.html`, `cliente/login.html` |
+| Conta e histórico local | `cliente/dashboard.html` |
+| Painel sem autenticação | `admin/index.html` |
+| Privacidade da demonstração | `politica-privacidade.html` |
 
-### 🌐 Para Clientes (Site Principal)
+## O que funciona
 
-| Funcionalidade | Descrição |
-|---|---|
-| **Catálogo de Serviços** | 6 serviços com preços e descrições |
-| **Orçamento Online** | Calculadora interativa com descontos progressivos (10% 2 serviços, 15% 3+) |
-| **Sistema de Cupons** | Códigos promocionais (ex: BEMVINDO10, BARBADOS20, NATAL50, ANIVERSARIO) |
-| **Agendamento Inteligente** | Bloqueia horários já ocupados em tempo real por barbeiro |
-| **Confirmação WhatsApp** | Abre WhatsApp com mensagem formatada ao confirmar |
-| **Confirmação E-mail** | Log de e-mails simulado (pronto para API real) |
-| **Lembrete 24h** | Notificação automática no dia anterior |
-| **Chat Widget** | Botão flutuante WhatsApp com opções rápidas |
-| **Modo Escuro** | Toggle persistente (salva no localStorage) |
-| **PWA Instalável** | Service Worker + Manifest - funciona offline, instala como app |
-| **Avaliações** | Sistema de estrelas + comentários pós-serviço (+5 pts) |
-| **Galeria** | Fotos dos trabalhos com hover effects |
-| **FAQ + LGPD** | Perguntas frequentes e Política de Privacidade completa |
-| **Depoimentos Dinâmicos** | Carrega avaliações reais dos clientes |
+- Seleção de serviços do orçamento, descontos por quantidade e cupons locais; total limitado a zero.
+- Agenda por profissional, intervalos de duração, domingo fechado, sábado até 18h e dias úteis até 20h. Horários passados e atendimentos que ultrapassam o expediente são recusados no salvamento.
+- Conflitos locais revalidados ao salvar. Web Locks serializa gravações entre abas quando suportado; não resolve concorrência entre aparelhos.
+- “Qualquer um” é conservador: sobreposição com qualquer profissional bloqueia esse intervalo. Não distribui automaticamente a reserva entre profissionais.
+- Cadastro, login, logout, perfil, histórico, avaliações e pontos locais. Não confundir com controles de acesso seguros.
+- Cache offline de páginas e arquivos locais após a primeira visita online. Imagens, mapa e ícones externos dependem de rede; o manifest usa SVG inline, sem garantia de instalação em todos os sistemas.
+- Atualização local entre abas via evento `storage` e consultas periódicas no admin, **não tempo real entre dispositivos**.
 
-### 👤 Área do Cliente (`cliente/`)
+## Testes
 
-| Funcionalidade | Descrição |
-|---|---|
-| **Cadastro/Login** | Autenticação com telefone + senha |
-| **Bônus Boas-vindas** | +20 pontos ao criar conta |
-| **Dashboard** | Pontos, visitas, progresso para brinde |
-| **Programa Fidelidade** | A cada 10 cortes = 1 grátis (barra de progresso) |
-| **Meus Agendamentos** | Próximos e histórico com status |
-| **Indique e Ganhe** | Código/link próprio +50 pts por indicação convertida |
-| **Avaliar Serviços** | Botão aparece após serviço concluído |
-| **Editar Perfil** | Atualizar nome, telefone, e-mail |
-| **Lembretes** | Modal automático 24h antes do agendamento |
+Node.js 20 ou superior, sem dependências para testes unitários:
 
-### 🛠️ Painel Administrativo (`admin/`)
-
-| Aba | Funcionalidades |
-|---|---|
-| **Dashboard** | Métricas em tempo real (agendamentos hoje, clientes, faturamento, avaliação), próximos agendamentos, clientes VIP, top serviços, agenda da semana |
-| **Agendamentos** | Filtros (todos/confirmados/concluídos/cancelados), concluir (+10 pts cliente), cancelar, excluir, **WhatsApp direto**, solicitar avaliação |
-| **Clientes** | Lista com busca, VIP badge (≥10 visitas), WhatsApp direto |
-| **Serviços** | CRUD completo (nome, preço, duração, categoria, ativo/inativo) |
-| **Cupons** | Criar/ativar/desativar/excluir cupons (% ou fixo), validade, estatísticas de uso |
-| **Avaliações** | Ver todas, nota média, excluir inadequadas |
-| **Financeiro** | Receitas do mês, lucro (despesas fixas R$800), taxa de ocupação, histórico, **Exportar CSV** |
-| **Configurações** | Dados da barbearia, **Backup/Restore JSON**, limpar tudo |
-
-### 🔔 Sistema de Notificações Admin (Tempo Real)
-
-- **Polling a cada 5s** detecta novos agendamentos de outras abas/dispositivos
-- **Evento `storage`** sincroniza mudanças entre abas
-- **Badge** na sidebar mostra notificações não lidas
-- **Dropdown** com histórico de notificações
-- **Toast** animado para avisos imediatos
-- **Som** de notificação (Web Audio API)
-
-## 🛠️ Tecnologias
-
-- **HTML5** semântico e acessível
-- **CSS3** com variáveis customizadas, Grid/Flexbox, animações
-- **JavaScript Vanilla** (ES6+) - sem dependências externas (exceto Font Awesome via CDN)
-- **localStorage** para persistência (protótipo funcional sem backend)
-- **Service Worker** para PWA (cache offline, background sync)
-- **Web Audio API** para sons de notificação
-- **Web Share / Clipboard API** para Indique e Ganhe
-
-## 📱 Recursos de UX/UI
-
-- **Design System** com variáveis CSS (fácil personalização)
-- **Mobile First** - responsivo em qualquer dispositivo
-- **Dark Mode** completo com persistência
-- **Animações sutis** (hover, focus, modais, progress bars)
-- **Feedback visual** (toasts, modais, badges, skeletons)
-- **Acessibilidade** (labels, contrastes, foco visível, ARIA)
-- **Performance** (lazy loading, cache SW, minificação sugerida)
-
-## 🔐 Login Admin
-O painel admin não tem login fixo (para o protótipo). Em produção, adicione autenticação JWT/session.
-
-## 🔐 Senha do cliente
-
-A senha **nunca é gravada em texto puro**. O `localStorage` guarda um derivador
-PBKDF2-SHA256 com sal aleatório, no formato `pbkdf2$<sal>$<hash>`, e a
-comparação no login é feita sobre o derivador.
-
-- **Senha nova:** o derivador é gerado no cadastro (`js/senha.js`).
-- **Conta antiga:** quem tinha a senha em texto puro continua entrando — o
-  login reconhece o formato antigo e reescreve o registro com o derivador
-  assim que o acesso é confirmado.
-- **Sessão:** o objeto salvo em `sessionStorage` não contém a senha.
-
-Isso continua sendo um protótipo sem backend: a verificação acontece no
-navegador, então quem controla o navegador controla a comparação. O ganho real
-é não deixar a senha original em disco. A porta de entrada de verdade de uma
-conta de cliente seria o servidor, com a senha verificada do lado de lá e a
-sessão mantida por cookie `HttpOnly`.
-
-Cobertura: `node --test tests/senha.test.mjs` → **10/10** (o derivador não
-contém a senha, o sal muda a cada conta, a senha errada é recusada, um valor
-adulterado não passa, um valor malformado não causa exceção e a conta antiga é
-migrada).
-
-## 🐛 Service Worker
-
-O cache offline lista os 15 arquivos estáticos do projeto. Antes, cinco
-entradas apontavam para caminhos inexistentes (`/cliente/js/...`,
-`/admin/js/...`) e, como `cache.addAll()` falha inteiro se **uma** URL falhar,
-o Service Worker não instalava — o modo offline nunca funcionou.
-
-Agora os caminhos batem com a estrutura real, o `js/senha.js` entrou no cache e
-a instalação usa `Promise.allSettled`, para que um arquivo indisponível não
-derrube o resto.
-
-## 📦 Estrutura de Arquivos
-```
-barbearia/
-├── index.html                 # Site principal
-├── politica-privacidade.html  # LGPD
-├── manifest.json              # PWA Manifest
-├── service-worker.js          # Service Worker (offline, cache, push)
-├── css/
-│   ├── style.css              # Estilos principais + dark mode + componentes
-│   ├── admin.css              # Painel admin (sidebar, tabs, métricas)
-│   └── cliente.css            # Área do cliente (auth, dashboard)
-├── js/
-│   ├── main.js                # Site principal (agendamento, orçamento, PWA, chat)
-│   ├── admin.js               # Painel admin completo + notificações realtime
-│   ├── cliente.js             # Auth (login/cadastro/logout)
-│   ├── senha.js               # Derivador PBKDF2 da senha do cliente
-│   └── dashboard.js           # Dashboard cliente (pontos, agendamentos, indique)
-├── cliente/
-│   ├── login.html
-│   ├── cadastro.html
-│   └── dashboard.html
-├── admin/
-│   └── index.html
-├── tests/
-│   └── senha.test.mjs         # Testes do tratamento de senha
+```sh
+node --test
 ```
 
-## 💾 Persistência de Dados (localStorage Keys)
+Regressões de senha, escape de HTML, regras de agenda e caminhos do PWA. O workflow `.github/workflows/ci.yml` executa esses testes em PRs para `main` e pushes em `main`. A execução local não significa que o Actions remoto foi executado.
 
-| Key | Descrição |
-|---|---|
-| `agendamentos` | Array de todos os agendamentos |
-| `clientesConta` | Clientes cadastrados (a senha fica como derivador PBKDF2, nunca em texto puro) |
-| `servicos` | Catálogo de serviços editável |
-| `cupons` | Cupons de desconto |
-| `avaliacoes` | Avaliações dos clientes |
-| `historicoPontos` | Log de ganhos/gastos de pontos |
-| `emailsEnviados` | Log de confirmações por e-mail |
-| `lembretes` | Agendamento de lembretes 24h |
-| `orcamentoAtual` | Orçamento em andamento |
-| `barbeariaConfig` | Configurações do estabelecimento |
-| `notifAdmin` | Notificações do painel admin |
-| `darkMode` | Preferência de tema |
+Verificações opcionais de navegador usam `playwright-core` e Edge/Chromium, instalados separadamente. Defina `PLAYWRIGHT_MODULE_PATH` para o caminho do pacote e `EDGE_PATH` se necessário:
 
-## 🔧 Configuração para Produção
+```sh
+node scripts/verificar-browser.cjs
+node scripts/verificar-pwa.cjs
+```
 
-Para transformar em produto real:
+O primeiro script preserva as 16 verificações P0 e gera capturas em `docs/p1/final/`. O segundo também requer um servidor na porta 8081 apontando para a pasta-pai, disponibilizando o projeto em `/barbearia-p0/`; cobre seis páginas, cadastro local, fontes e imagens offline. Ambos usam contextos descartáveis e somente dados fictícios. Os artefatos originais P0 continuam em `docs/evidencias/`.
 
-1. **Backend:** Node.js/Express, Python/FastAPI, PHP/Laravel
-2. **Banco:** PostgreSQL (recomendado) ou MySQL
-3. **Auth:** JWT + HttpOnly cookies, 2FA opcional
-4. **WhatsApp:** WhatsApp Business API (Meta) ou Twilio
-5. **E-mail:** SendGrid, Mailgun, Amazon SES
-6. **Pagamentos:** Mercado Pago, Stripe, Asaas (PIX)
-7. **Calendar:** Google Calendar API para sincronizar
-8. **Deploy:** Vercel, Netlify, Railway, VPS (Docker)
-9. **Monitoramento:** Sentry, LogRocket, GA4
-10. **LGPD:** Consentimento de cookies, DPO, relatórios de impacto
+Validação adicional de interface usa `@axe-core/playwright`, separadamente, sem incluir a dependência no site. Defina `AXE_MODULE_PATH` quando instalado fora do projeto:
 
-## 💡 Ideias para Expansão Futura
+```sh
+node scripts/verificar-interface.cjs
+```
 
-- [ ] **App Mobile** (React Native / Capacitor)
-- [ ] **Sistema de Caixa** (PDV integrado)
-- [ ] **Gestão de Estoque** (produtos para venda)
-- [ ] **Agenda Recorrente** (cortes quinzenais automáticos)
-- [ ] **Múltiplas Unidades** (filiais)
-- [ ] **Marketplace** (outros barbeiros alugam cadeira)
-- [ ] **IA** (sugestão de horários, previsão de demanda)
-- [ ] **Webhooks** (integração com CRM, Zapier)
-- [ ] **Multi-idioma** (EN/ES para turistas)
+Performance e outras categorias do Lighthouse são medidas por CLI, em sequência, nos perfis mobile e desktop. Ferramenta externa (Lighthouse 13.5 requer Node 22.19+); defina `LIGHTHOUSE_CLI` para `lighthouse/cli/index.js` e `EDGE_PATH` se necessário:
 
-## 📞 Contato do Desenvolvedor
+```sh
+node scripts/auditar-lighthouse.cjs
+```
 
-Projeto desenvolvido por **Lucas Santana**  
-📧 lucasdpaz@email.com | 💼 [LinkedIn](https://linkedin.com/in/lucasdpaz) | 🐙 [GitHub](https://github.com/lucasdpaz)
+O CSS dos ícones utilizados pode ser regenerado com `node scripts/subset-icons.cjs`, a partir da distribuição original incluída. Não é necessário build para executar o site.
 
----
+## Auditoria e próximos passos
 
-**⭐ Se este projeto te ajudou, deixe uma estrela no GitHub!**  
-**Licença:** MIT - Use livremente para fins educacionais e comerciais.
+- [Diagnóstico inicial](docs/auditoria-p0.md)
+- [Relatório de entrega, limitações e plano priorizado](docs/relatorio-entrega.md)
+- [Resultados de navegador](docs/evidencias/browser-results.json)
+- [Resultados do PWA](docs/evidencias/pwa-results.json)
+
+Não publicar como agenda operacional sem backend, autenticação/autorização de servidor, restrição atômica de conflitos no banco, política de privacidade adequada e integrações reais verificadas. Esta branch não foi implantada nem mesclada.

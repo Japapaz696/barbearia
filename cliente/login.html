@@ -1,40 +1,31 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Barbado's Barbearia</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/cliente.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex"><meta name="theme-color" content="#171819">
+    <meta name="description" content="Entre na conta local de demonstração da Barbado's Barbearia.">
+    <title>Entrar | Barbado's Barbearia</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/cliente.css"><link rel="stylesheet" href="../assets/vendor/fontawesome/css/used.css">
+    <script src="../js/interface.js"></script>
 </head>
 <body class="auth-body">
-    <div class="auth-container">
-        <div class="auth-box">
-            <div class="auth-header">
-                <h1><i class="fas fa-scissors"></i> BARBADO'S</h1>
-                <p>Acesse sua conta</p>
-            </div>
-            <form id="formLogin" class="auth-form">
-                <div class="form-group">
-                    <label><i class="fas fa-phone"></i> Telefone (com DDD)</label>
-                    <input type="tel" id="telefoneLogin" placeholder="(31) 99999-9999" required>
-                </div>
-                <div class="form-group">
-                    <label><i class="fas fa-lock"></i> Senha</label>
-                    <input type="password" id="senhaLogin" placeholder="Sua senha" required>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-sign-in-alt"></i> Entrar
-                </button>
-                <p class="auth-link">Não tem conta? <a href="cadastro.html">Cadastre-se aqui</a></p>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="auth-topbar"><a class="logo" href="../index.html">BARBADO'S<span>BARBEARIA</span></a><div><a class="text-link" href="../index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao site</a><button id="darkModeToggle" class="icon-button" type="button" aria-label="Alternar tema"><i class="fas fa-sun" aria-hidden="true"></i></button></div></header>
+    <main class="auth-layout" id="conteudo">
+        <aside class="auth-story"><div><h2>Seu estilo.<br>Seu espaço.</h2><p>Suas simulações e seu histórico, juntos na conta local da Barbado's.</p></div><figure><img src="../assets/images/barber-detail.webp" alt="Foto ilustrativa de banco: cuidado no acabamento de um corte" width="640" height="427"><figcaption>Imagem ilustrativa · Unsplash</figcaption></figure><p class="auth-story-note">Demonstração de portfólio.<br>Não utilize dados ou senhas reais.</p></aside>
+        <section class="auth-box" aria-labelledby="loginTitle">
+            <div class="auth-header"><h1 id="loginTitle">Bom te ver<br>por aqui.</h1><p>Entre para continuar sua experiência na demo.</p></div>
+            <div class="demo-note" role="note"><i class="fas fa-info-circle" aria-hidden="true"></i><span>Esta conta existe apenas neste navegador. Não há autenticação de produção.</span></div>
+            <form id="formLogin" class="auth-form" novalidate>
+                <div class="form-group"><label for="telefoneLogin">Telefone com DDD</label><input type="tel" id="telefoneLogin" name="telefone" autocomplete="tel" placeholder="Telefone usado no cadastro" required></div>
+                <div class="form-group"><label for="senhaLogin">Senha de teste</label><div class="password-field"><input type="password" id="senhaLogin" name="senha" autocomplete="current-password" placeholder="Sua senha exclusiva da demo" required><button class="password-toggle" type="button" data-password-target="senhaLogin" aria-label="Mostrar senha" aria-pressed="false"><i class="far fa-eye" aria-hidden="true"></i></button></div></div>
+                <div class="form-error" data-form-error role="alert" tabindex="-1" hidden></div>
+                <button type="submit" class="btn btn-primary btn-block">Entrar na demo <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+                <p class="auth-link">Primeira vez aqui? <a href="cadastro.html">Criar conta de teste</a></p>
             </form>
-            <div class="auth-back">
-                <a href="../index.html"><i class="fas fa-arrow-left"></i> Voltar ao site</a>
-            </div>
-        </div>
-    </div>
-    <script src="../js/senha.js"></script>
-<script src="../js/cliente.js"></script>
+            <div class="auth-footnote"><i class="fas fa-laptop" aria-hidden="true"></i><p>Uma conta criada em outro navegador não estará disponível aqui. <a href="../politica-privacidade.html">Como seus dados são guardados</a></p></div>
+        </section>
+    </main>
+    <script src="../js/seguranca.js"></script><script src="../js/senha.js"></script><script src="../js/cliente.js"></script>
 </body>
 </html>

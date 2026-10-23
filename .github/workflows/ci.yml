@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Testes do tratamento de senha
+    name: Regressões de senha, agenda, segurança e PWA
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +37,7 @@ jobs:
             const bloco = sw.match(/const STATIC_ASSETS = \[([\s\S]*?)\]/);
             if (!bloco) { console.error('STATIC_ASSETS nao encontrado'); process.exit(1); }
             const urls = [...bloco[1].matchAll(/'([^']+)'/g)].map(m => m[1]);
-            const faltando = urls.filter(u => !fs.existsSync('.' + u));
+            const faltando = urls.filter(u => !fs.existsSync(u));
             if (faltando.length) {
               console.error('Caminhos do Service Worker que nao existem:');
               faltando.forEach(u => console.error('  - ' + u));
