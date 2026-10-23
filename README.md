@@ -2,6 +2,14 @@
 
 Protótipo de portfólio com orçamento, simulação de agenda, área do cliente e painel administrativo local. **Não é um sistema de produção. Use apenas dados fictícios e senha exclusiva de teste.**
 
+## Redesign P1
+
+Identidade preto/carvão e dourado preservada, tipografia e fotografias locais, dois temas, catálogo selecionável, orçamento conectado à seleção, atalhos de horário acessíveis, formulários com erros inline e painéis unificados. Nenhuma dependência de frontend ou backend foi adicionada. Fontes e ícones incluem suas licenças em `assets/`.
+
+- [Comparação visual antes/depois](docs/p1/comparacao.html)
+- [Relatório da fase P1](docs/p1/relatorio.md)
+- [Capturas e resultados finais](docs/p1/final/)
+
 ## Limites importantes
 
 - Os dados ficam no `localStorage` do navegador. Não existe backend, banco central ou sincronização entre aparelhos.
@@ -56,7 +64,21 @@ node scripts/verificar-browser.cjs
 node scripts/verificar-pwa.cjs
 ```
 
-O primeiro script testa fluxos e gera 20 capturas em `docs/evidencias/`. O segundo também requer um servidor na porta 8081 apontando para a pasta-pai, disponibilizando o projeto em `/barbearia-p0/`. Ambos usam contextos descartáveis e somente dados fictícios.
+O primeiro script preserva as 16 verificações P0 e gera capturas em `docs/p1/final/`. O segundo também requer um servidor na porta 8081 apontando para a pasta-pai, disponibilizando o projeto em `/barbearia-p0/`; cobre seis páginas, cadastro local, fontes e imagens offline. Ambos usam contextos descartáveis e somente dados fictícios. Os artefatos originais P0 continuam em `docs/evidencias/`.
+
+Validação adicional de interface usa `@axe-core/playwright`, separadamente, sem incluir a dependência no site. Defina `AXE_MODULE_PATH` quando instalado fora do projeto:
+
+```sh
+node scripts/verificar-interface.cjs
+```
+
+Performance e outras categorias do Lighthouse são medidas por CLI, em sequência, nos perfis mobile e desktop. Ferramenta externa (Lighthouse 13.5 requer Node 22.19+); defina `LIGHTHOUSE_CLI` para `lighthouse/cli/index.js` e `EDGE_PATH` se necessário:
+
+```sh
+node scripts/auditar-lighthouse.cjs
+```
+
+O CSS dos ícones utilizados pode ser regenerado com `node scripts/subset-icons.cjs`, a partir da distribuição original incluída. Não é necessário build para executar o site.
 
 ## Auditoria e próximos passos
 

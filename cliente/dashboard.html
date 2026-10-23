@@ -1,127 +1,33 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Acompanhe seus agendamentos, pontos de fidelidade e histórico na Barbado's Barbearia.">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="robots" content="noindex">
-    <title>Minha Conta - Barbado's Barbearia</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a1a1a'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='58'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/cliente.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex"><meta name="theme-color" content="#171819">
+    <meta name="description" content="Sua conta local de demonstração: agendamentos, pontos e histórico na Barbado's.">
+    <title>Minha conta | Barbado's Barbearia</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/cliente.css"><link rel="stylesheet" href="../assets/vendor/fontawesome/css/used.css">
+    <script src="../js/interface.js"></script>
 </head>
-<body>
-    <header class="header">
-        <nav class="navbar" aria-label="Navegação da conta">
-            <div class="logo">
-                <h1><i class="fas fa-scissors" aria-hidden="true"></i> BARBADO'S</h1>
-                <p>Minha Conta</p>
+<body class="account-body">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <div class="demo-banner" role="note"><span class="demo-dot" aria-hidden="true"></span><span><strong>Sua conta de demonstração.</strong> Dados apenas neste navegador. Sem autenticação real ou sincronização.</span></div>
+    <header class="site-header"><nav class="navbar" aria-label="Navegação da conta"><a class="logo" href="../index.html">BARBADO'S<span>BARBEARIA</span></a><div class="account-nav"><a href="../index.html" class="text-link"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao site</a><button id="darkModeToggle" class="icon-button" type="button" aria-label="Alternar tema"><i class="fas fa-sun" aria-hidden="true"></i></button><button type="button" class="btn btn-secondary" onclick="logout()">Sair</button></div></nav></header>
+    <main class="dashboard section-wrap" id="conteudo">
+        <div class="welcome-bar"><div><h1 id="welcomeMsg">Sua conta.</h1><p>Um espaço para acompanhar suas simulações.</p></div><a href="../index.html#orcamento" class="btn btn-primary">Simular horário <i class="fas fa-plus" aria-hidden="true"></i></a></div>
+        <nav class="account-sections" aria-label="Seções da conta"><a href="#meus-agendamentos">Agendamentos</a><a href="#fidelidade">Fidelidade</a><a href="#historico">Histórico</a><a href="#meus-dados">Meus dados</a></nav>
+        <div class="account-grid">
+            <div class="account-main">
+                <section id="meus-agendamentos" class="dashboard-section"><div class="section-header"><h2>Seus agendamentos</h2><span class="local-tag"><i class="fas fa-laptop" aria-hidden="true"></i> Locais</span></div><div id="listaAgendamentos" class="agendamentos-lista" aria-live="polite"><p class="empty-state">Carregando registros locais…</p></div></section>
+                <section id="historico" class="dashboard-section"><div class="section-header"><h2>Seu histórico</h2></div><div id="historicoVisitas" class="historico-lista"><p class="empty-state">Carregando histórico local…</p></div></section>
+                <section id="meus-dados" class="dashboard-section"><div class="section-header"><h2>Meus dados de teste</h2></div><p class="section-note">Estas alterações ficam somente neste navegador.</p><form id="formAtualizar" class="form-atualizar"><div class="form-row"><div class="form-group"><label for="editNome">Nome</label><input type="text" id="editNome" name="nome" autocomplete="name" required maxlength="100"></div><div class="form-group"><label for="editTelefone">Telefone com DDD</label><input type="tel" id="editTelefone" name="telefone" autocomplete="tel" required maxlength="20"></div></div><div class="form-group"><label for="editEmail">E-mail</label><input type="email" id="editEmail" name="email" autocomplete="email" required maxlength="160"></div><div class="form-error" data-form-error role="alert" tabindex="-1" hidden></div><button type="submit" class="btn btn-primary">Salvar alterações</button></form></section>
             </div>
-            <ul class="nav-menu">
-                <li><a href="../index.html"><i class="fas fa-home" aria-hidden="true"></i> Início</a></li>
-                <li><a href="#" onclick="logout()" class="btn-login"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <main class="dashboard">
-        <div class="container">
-            <div class="demo-note" role="note">
-                <i class="fas fa-flask" aria-hidden="true"></i>
-                <span>Área de demonstração: seus dados ficam salvos apenas neste navegador e não sincronizam com outros aparelhos.</span>
-            </div>
-
-            <div class="welcome-bar">
-                <h2 id="welcomeMsg">Olá, Cliente!</h2>
-                <p>Acompanhe seus agendamentos e pontos de fidelidade</p>
-            </div>
-
-            <div class="stats-grid">
-                <div class="stat-card stat-pontos">
-                    <i class="fas fa-star" aria-hidden="true"></i>
-                    <div>
-                        <h3 id="pontosCliente">0</h3>
-                        <p>Pontos acumulados</p>
-                    </div>
-                </div>
-                <div class="stat-card stat-visitas">
-                    <i class="fas fa-cut" aria-hidden="true"></i>
-                    <div>
-                        <h3 id="visitasCliente">0</h3>
-                        <p>Visitas realizadas</p>
-                    </div>
-                </div>
-                <div class="stat-card stat-progresso">
-                    <i class="fas fa-gift" aria-hidden="true"></i>
-                    <div>
-                        <h3 id="cortesRestantes">10</h3>
-                        <p>Cortes p/ brinde</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="progress-bar-container">
-                <div class="progress-label">
-                    <span>Programa Fidelidade</span>
-                    <span id="progressPercent">0%</span>
-                </div>
-                <div class="progress-bar" role="progressbar" aria-label="Progresso do programa de fidelidade" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar">
-                    <div id="progressFill" class="progress-fill" style="width: 0%"></div>
-                </div>
-                <p class="progress-text">A cada 10 cortes, você ganha 1 grátis! 🎁</p>
-            </div>
-
-            <div class="indique-bar">
-                <div>
-                    <strong>🎁 Indique e Ganhe</strong>
-                    <p>Recurso planejado; indicações e bônus ainda não são processados.</p>
-                </div>
-            </div>
-
-            <section class="dashboard-section">
-                <div class="section-header">
-                    <h3><i class="fas fa-calendar-check" aria-hidden="true"></i> Meus Agendamentos</h3>
-                    <a href="../index.html#agendamento" class="btn btn-primary">+ Novo Agendamento</a>
-                </div>
-                <div id="listaAgendamentos" class="agendamentos-lista">
-                    <p class="empty-state">Carregando...</p>
-                </div>
-            </section>
-
-            <section class="dashboard-section">
-                <h3><i class="fas fa-history" aria-hidden="true"></i> Histórico de Visitas</h3>
-                <div id="historicoVisitas" class="historico-lista">
-                    <p class="empty-state">Carregando...</p>
-                </div>
-            </section>
-
-            <section class="dashboard-section">
-                <h3><i class="fas fa-user-edit" aria-hidden="true"></i> Meus Dados</h3>
-                <form id="formAtualizar" class="form-atualizar">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="editNome">Nome</label>
-                            <input type="text" id="editNome" name="nome" autocomplete="name">
-                        </div>
-                        <div class="form-group">
-                            <label for="editTelefone">Telefone</label>
-                            <input type="tel" id="editTelefone" name="telefone" autocomplete="tel">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="editEmail">E-mail</label>
-                        <input type="email" id="editEmail" name="email" autocomplete="email">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
-                </form>
-            </section>
+            <aside class="account-aside" id="fidelidade" aria-labelledby="loyaltyTitle">
+                <section class="loyalty-panel"><i class="far fa-star loyalty-symbol" aria-hidden="true"></i><h2 id="loyaltyTitle">Seu cuidado<br>vale pontos.</h2><p>Um exemplo de fidelidade, sem benefícios comerciais reais.</p><div class="stats-grid"><div class="stat-card"><strong id="pontosCliente">0</strong><span>Pontos</span></div><div class="stat-card"><strong id="visitasCliente">0</strong><span>Visitas</span></div><div class="stat-card"><strong id="cortesRestantes">10</strong><span>Até a meta</span></div></div><div class="progress-bar-container"><div class="progress-label"><span>Meta de 10 visitas</span><span id="progressPercent">0%</span></div><div class="progress-bar" role="progressbar" aria-label="Progresso da fidelidade demonstrativa" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progressBar"><div id="progressFill" class="progress-fill" style="width:0%"></div></div><p class="progress-text">Progresso demonstrativo, sem resgate de serviços reais.</p></div></section>
+                <div class="account-help"><h3>Sua próxima experiência</h3><p>Escolha os serviços e veja o orçamento antes de simular um horário.</p><a class="text-link" href="../index.html#servicos">Ver serviços <i class="fas fa-arrow-right" aria-hidden="true"></i></a></div>
+            </aside>
         </div>
     </main>
-
-    <div id="notificacoes" aria-live="polite"></div>
-    <script src="../js/seguranca.js"></script>
-    <script src="../js/dashboard.js"></script>
+    <footer class="account-footer section-wrap"><p>Barbado's · Demonstração de portfólio</p><a href="../politica-privacidade.html">Privacidade e armazenamento</a></footer>
+    <script src="../js/seguranca.js"></script><script src="../js/dashboard.js"></script>
 </body>
 </html>

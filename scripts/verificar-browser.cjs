@@ -6,14 +6,14 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const base = process.env.AUDIT_URL || 'http://127.0.0.1:8080/';
-const output = path.resolve(__dirname, '../docs/evidencias');
+const output = path.resolve(__dirname, process.env.AUDIT_OUTPUT || '../docs/p1/final');
 const report = { base, generatedAt: new Date().toISOString(), checks: [], layouts: [], errors: [] };
 fs.mkdirSync(output, { recursive: true });
 
 (async () => {
     const browser = await chromium.launch({ executablePath: process.env.EDGE_PATH || 'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe', headless: true });
     try {
-        const context = await browser.newContext({ serviceWorkers: 'block' });
+        const context = await browser.newContext({ serviceWorkers: 'block', reducedMotion: 'reduce' });
         const page = await context.newPage();
         page.on('pageerror', error => report.errors.push(error.message));
         await page.goto(base);
@@ -51,6 +51,7 @@ fs.mkdirSync(output, { recursive: true });
             result.honestModal = document.querySelector('.modal-overlay').textContent.includes('Nenhum horário real');
             document.querySelector('.modal-overlay').remove();
             document.querySelector('input[data-nome="Pézinho"]').checked = false;
+            document.querySelector('input[data-nome="Dia do Noivo"]').checked = true;
             atualizarOrcamento();
             document.getElementById('nomeCliente').value = 'Outro teste fictício';
             document.getElementById('telefone').value = '31900000000';
@@ -71,6 +72,8 @@ fs.mkdirSync(output, { recursive: true });
                 document.getElementById('nomeCliente').value = 'Concorrência fictícia';
                 document.getElementById('telefone').value = '31900000000';
                 document.getElementById('servicosAgendamento').value = 'Corte Masculino';
+                document.querySelectorAll('.checkbox-item input').forEach(input => { input.checked = input.dataset.nome === 'Corte Masculino'; });
+                atualizarOrcamento();
                 document.getElementById('barbeiro').value = 'João';
                 const date = document.getElementById('dataAgendamento');
                 date.value = agenda.hojeLocal(future); date.dispatchEvent(new Event('change'));
@@ -137,8 +140,10 @@ fs.mkdirSync(output, { recursive: true });
                 await page.evaluate(async () => {
                     for (const img of document.images) img.loading = 'eager';
                     await Promise.all([...document.images].map(img => img.decode().catch(() => {})));
+                    await document.fonts.ready;
                 });
-                await page.screenshot({ path: path.join(output, `${name}-${width}.png`), fullPage: true });
+                await page.screenshot({ path: path.join(output, `${name}-${width}.png`), fullPage: true, animations: 'disabled' });
+                if (name === 'home') await page.screenshot({ path: path.join(output, `hero-${width}.png`), animations: 'disabled' });
                 const layout = await page.evaluate(() => ({ viewport: innerWidth, scroll: document.documentElement.scrollWidth, images: [...document.images].map(img => ({ loaded: img.naturalWidth > 0, src: img.currentSrc })), offenders: [...document.querySelectorAll('body *')].filter(el => { const r = el.getBoundingClientRect(); return r.width && r.right > innerWidth + 1; }).slice(0, 8).map(el => el.className) }));
                 report.layouts.push({ page: name, width, ...layout });
             }

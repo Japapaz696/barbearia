@@ -1,323 +1,98 @@
-/* Páginas de Autenticação */
-.auth-body {
-    background: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+.auth-topbar{max-width:1200px;width:calc(100% - 96px);margin:auto;min-height:100px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+.auth-topbar>div{display:flex;align-items:center;gap:24px}
+.auth-topbar .text-link{color:var(--text-light);text-decoration:none;font-size:12px}
+.auth-layout{max-width:1080px;width:calc(100% - 96px);margin:48px auto 72px;display:grid;grid-template-columns:.95fr 1fr;gap:110px;align-items:start}
+.auth-story{padding-top:8px;min-width:0}
+.auth-story h2{font-size:60px;margin-bottom:20px}
+.auth-story>div>p{font-size:14px;color:var(--text-light);max-width:35ch}
+.auth-story figure{position:relative;margin-top:32px;border-radius:var(--radius);overflow:hidden;background:var(--card-bg)}
+.auth-story img{width:100%;height:280px;object-fit:cover}
+.auth-story figcaption{position:absolute;bottom:0;left:0;right:0;padding:10px 16px;background:#171819de;color:#deded6;font-size:10px}
+.auth-story-note{font-size:12px;color:var(--text-light);margin-top:22px}
+.auth-header{margin-bottom:24px}
+.auth-header h1{font-size:60px;text-transform:none}
+.auth-header p{font-size:13px;color:var(--text-light);margin-top:16px}
+.auth-box>.demo-note{margin-bottom:28px;font-size:11px;padding:14px 16px}
+.auth-form{display:flex;flex-direction:column;gap:22px}
+.auth-form .form-row{gap:16px}
+.auth-form>.field-hint{margin-top:-12px;font-size:11px}
+.auth-form .btn{margin-top:4px}
+.auth-link{font-size:12px;color:var(--text-light);text-align:center}
+.auth-link a{color:var(--gold-ink);font-weight:600}
+.auth-footnote{display:flex;gap:14px;border-top:1px solid var(--border);padding-top:24px;margin-top:32px;color:var(--text-light);font-size:11px}
+.auth-footnote i{font-size:18px;color:var(--gold-ink);margin-top:3px}
+.auth-footnote a{display:block;margin-top:8px}
+.welcome-points{display:flex;gap:16px;margin-top:26px;font-size:12px}
+.welcome-points>i{font-size:22px;color:var(--gold-ink);margin-top:5px}
+.welcome-points strong,.welcome-points span{display:block}
+.welcome-points span{font-size:11px;color:var(--text-light);margin-top:6px}
+.consent-group{border-top:1px solid var(--border);padding-top:6px}
+.consent-group .field-hint{font-size:10px;margin:12px 0 0 31px}
+.auth-form .form-error{margin:0}
+.account-nav{display:flex;align-items:center;gap:18px}
+.account-nav>.text-link{color:var(--text-light);font-size:12px;text-decoration:none}
+.account-nav .btn{min-height:44px;font-size:12px;padding:10px 18px}
+.dashboard{padding-top:48px;padding-bottom:60px}
+.welcome-bar{display:flex;align-items:center;justify-content:space-between;gap:28px;margin-bottom:34px}
+.welcome-bar h1{font-size:60px;text-transform:none;overflow-wrap:anywhere}
+.welcome-bar p{font-size:14px;color:var(--text-light);margin-top:12px}
+.account-sections{display:flex;gap:30px;border-bottom:1px solid var(--border);margin-bottom:32px;overflow:auto;scrollbar-width:thin}
+.account-sections a{display:flex;align-items:center;min-height:52px;text-decoration:none;color:var(--text-light);font-size:13px;white-space:nowrap}
+.account-sections a:first-child{border-bottom:2px solid var(--primary);color:var(--text)}
+.account-grid{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(280px,1fr);gap:28px;align-items:start}
+.account-main,.account-aside{min-width:0}
+.dashboard-section{background:var(--card-bg);border-radius:var(--radius);padding:28px;margin-bottom:24px;scroll-margin-top:110px}
+.section-header{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:24px}
+.section-header h2{font-family:var(--body-font);font-size:20px;letter-spacing:-.02em}
+.local-tag{font-size:10px;display:inline-flex;align-items:center;gap:6px;color:var(--text-light);white-space:nowrap}
+.section-note{font-size:12px;color:var(--text-light);margin-top:-10px;margin-bottom:24px}
+.loyalty-panel{border-radius:var(--radius);padding:28px;background:var(--card-bg)}
+.loyalty-symbol{font-size:24px;color:var(--gold-ink);margin-bottom:20px}
+.loyalty-panel h2{font-size:42px;margin-bottom:16px}
+.loyalty-panel>p{color:var(--text-light);font-size:12px}
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-block:28px}
+.stat-card strong{display:block;color:var(--gold-ink);font-size:28px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.3}
+.stat-card span{display:block;font-size:10px;color:var(--text-light);margin-top:6px}
+.progress-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:12px;color:var(--text-light);gap:16px}
+.progress-bar{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;background:var(--primary)}
+.progress-text{font-size:10px;color:var(--text-light);margin-top:12px}
+.account-help{padding:28px 4px}
+.account-help h3{font-size:16px;margin-bottom:12px}
+.account-help p{font-size:12px;color:var(--text-light);margin-bottom:16px}
+.agendamento-item,.visita-item{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-top:1px solid var(--border);padding:22px 0;min-width:0}
+.agendamento-item:first-child,.visita-item:first-child{border-top:0;padding-top:0}
+.agendamento-item:last-child,.visita-item:last-child{padding-bottom:0}
+.agendamento-info,.visita-info{min-width:0;overflow-wrap:anywhere}
+.agendamento-info h4,.visita-info h4{margin-bottom:12px;font-size:16px}
+.agendamento-info p,.visita-info p{font-size:12px;color:var(--text-light);margin-top:6px}
+.agendamento-info i,.visita-info i{width:16px;color:var(--gold-ink)}
+.visit-points{color:var(--gold-ink);font-weight:600;font-size:12px;white-space:nowrap}
+.status-badge{display:inline-block;border:1px solid var(--border);border-radius:5px;font-size:10px;padding:5px 9px;color:var(--text-light);white-space:nowrap}
+.status-concluido{background:var(--success-bg);color:var(--success);border-color:transparent}
+.status-cancelado{background:var(--error-bg);color:var(--error);border-color:transparent}
+.form-atualizar{display:flex;flex-direction:column;gap:20px}
+.form-atualizar>.btn{align-self:flex-start}
+.account-footer{display:flex;align-items:center;justify-content:space-between;gap:20px;padding-block:24px;border-top:1px solid var(--border);color:var(--text-light);font-size:11px}
+
+@media(max-width:1100px){.auth-topbar,.auth-layout{width:calc(100% - 64px)}.auth-layout{gap:60px}.auth-story h2,.auth-header h1{font-size:54px}.account-grid{gap:20px;grid-template-columns:minmax(0,1.5fr) minmax(260px,1fr)}}
+@media(max-width:767px){
+    .auth-topbar{width:calc(100% - 40px);min-height:88px}.auth-topbar>div{gap:14px}.auth-topbar .text-link{font-size:11px}.auth-topbar .text-link>i{display:none}
+    .auth-layout{width:calc(100% - 40px);max-width:480px;margin:32px auto 48px;grid-template-columns:1fr;gap:0}
+    .auth-story{display:none}.auth-header h1{font-size:52px}.auth-header p{font-size:12px}.auth-box>.demo-note{font-size:11px;margin-bottom:26px}
+    .auth-form .form-row{grid-template-columns:1fr;gap:22px}.auth-form{gap:22px}.auth-link{font-size:11px}.auth-footnote{font-size:10px}
+    .account-nav{gap:8px}.account-nav>.text-link{display:none}.navbar{gap:12px}
+    .dashboard{padding-top:32px}.welcome-bar{align-items:flex-start;flex-direction:column;gap:22px;margin-bottom:24px}.welcome-bar h1{font-size:50px}.welcome-bar p{font-size:12px}.welcome-bar>.btn{width:100%}
+    .account-sections{gap:22px;margin-bottom:24px}.account-sections a{font-size:12px}
+    .account-grid{grid-template-columns:1fr;gap:0}.dashboard-section{padding:24px 20px}.section-header{gap:12px}.section-header h2{font-size:18px}
+    .account-aside{display:grid;grid-template-columns:1fr;gap:0}.loyalty-panel{padding:24px}.loyalty-panel h2{font-size:40px}
+    .stats-grid{max-width:340px}.agendamento-item{flex-direction:column;gap:14px}.visita-item{gap:12px}.visita-item>span{font-size:12px;white-space:nowrap}
+    .account-footer{align-items:flex-start;flex-direction:column;gap:8px;font-size:10px}
 }
+@media(max-width:359px){.auth-topbar,.auth-layout{width:calc(100% - 32px)}.auth-topbar .text-link{display:none}.auth-header h1{font-size:48px}.dashboard-section{padding:22px 16px}.account-nav .btn{padding-inline:12px}}
 
-.auth-container {
-    width: 100%;
-    max-width: 500px;
-}
-
-.auth-box {
-    background: var(--white);
-    padding: 40px;
-    border-radius: 15px;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
-}
-
-.auth-box-large {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.auth-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.auth-header h1 {
-    color: var(--primary);
-    font-size: 32px;
-    letter-spacing: 3px;
-    margin-bottom: 10px;
-}
-
-.auth-header p {
-    color: var(--gray);
-}
-
-.promo-banner {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    color: var(--secondary);
-    padding: 12px;
-    border-radius: 8px;
-    text-align: center;
-    margin-bottom: 25px;
-    font-weight: 600;
-}
-
-.auth-form .form-group {
-    margin-bottom: 18px;
-}
-
-.auth-form label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-    font-weight: 600;
-}
-
-.auth-form label i {
-    color: var(--primary);
-}
-
-.auth-form input {
-    width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 15px;
-    transition: var(--transition);
-}
-
-.auth-form input:focus {
-    outline: none;
-    border-color: var(--primary);
-}
-
-.form-check {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.form-check input {
-    width: 18px;
-    height: 18px;
-    accent-color: var(--primary);
-}
-
-.auth-link {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.auth-link a {
-    color: var(--primary);
-    font-weight: 600;
-}
-
-.auth-back {
-    text-align: center;
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid #eee;
-}
-
-.auth-back a {
-    color: var(--gray);
-    transition: var(--transition);
-}
-
-.auth-back a:hover {
-    color: var(--primary);
-}
-
-/* Dashboard */
-.dashboard {
-    padding: 40px 0;
-    min-height: calc(100vh - 80px);
-    background: var(--light);
-}
-
-.welcome-bar {
-    background: var(--secondary);
-    color: var(--white);
-    padding: 30px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-    text-align: center;
-}
-
-.welcome-bar h2 {
-    color: var(--primary);
-    font-size: 32px;
-    margin-bottom: 5px;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-bottom: 30px;
-}
-
-.stat-card {
-    background: var(--white);
-    padding: 25px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-    transition: var(--transition);
-}
-
-.stat-card:hover {
-    transform: translateY(-3px);
-    box-shadow: var(--shadow);
-}
-
-.stat-card i {
-    font-size: 40px;
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.stat-pontos i { background: #fff3cd; color: #f39c12; }
-.stat-visitas i { background: #d4edda; color: #28a745; }
-.stat-progresso i { background: #f8d7da; color: var(--accent); }
-
-.stat-card h3 {
-    font-size: 32px;
-    margin-bottom: 5px;
-}
-
-.stat-card p {
-    color: var(--gray);
-    font-size: 14px;
-}
-
-.progress-bar-container {
-    background: var(--white);
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 30px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
-
-.progress-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 10px;
-    font-weight: 600;
-}
-
-.progress-bar {
-    height: 12px;
-    background: #e0e0e0;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 10px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
-    transition: width 0.5s ease;
-    border-radius: 10px;
-}
-
-.progress-text {
-    color: var(--gray);
-    font-size: 14px;
-    text-align: center;
-}
-
-.dashboard-section {
-    background: var(--white);
-    padding: 30px;
-    border-radius: 12px;
-    margin-bottom: 25px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-}
-
-.dashboard-section h3 {
-    color: var(--secondary);
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.dashboard-section h3 i {
-    color: var(--primary);
-}
-
-.section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.section-header h3 {
-    margin: 0;
-}
-
-.agendamento-item, .visita-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 18px;
-    background: var(--light);
-    border-radius: 10px;
-    margin-bottom: 12px;
-    border-left: 4px solid var(--primary);
-    transition: var(--transition);
-}
-
-.agendamento-item:hover, .visita-item:hover {
-    background: #ebebeb;
-    transform: translateX(5px);
-}
-
-.agendamento-info, .visita-info {
-    flex: 1;
-}
-
-.agendamento-info h4, .visita-info h4 {
-    margin-bottom: 5px;
-    color: var(--secondary);
-}
-
-.agendamento-info p, .visita-info p {
-    color: var(--gray);
-    font-size: 14px;
-    margin: 2px 0;
-}
-
-.status-badge {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: bold;
-    text-transform: uppercase;
-}
-
-.status-confirmado { background: #d4edda; color: #155724; }
-.status-pendente { background: #fff3cd; color: #856404; }
-.status-cancelado { background: #f8d7da; color: #721c24; }
-.status-concluido { background: #d1ecf1; color: #0c5460; }
-
-.empty-state {
-    text-align: center;
-    color: var(--gray);
-    padding: 30px;
-    font-style: italic;
-}
-
-.form-atualizar {
-    max-width: 600px;
-}
-
-@media (max-width: 768px) {
-    .agendamento-item, .visita-item {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
+.auth-body .auth-topbar .text-link,.auth-body .auth-box>.demo-note,.auth-body .auth-story figcaption,
+.auth-body .auth-form>.field-hint,.auth-body .auth-link,.auth-body .auth-footnote,
+.auth-body .welcome-points span,.auth-body .consent-group .field-hint,
+.account-body .local-tag,.account-body .stat-card span,.account-body .progress-label,
+.account-body .progress-text,.account-body .status-badge,.account-body .account-footer{font-size:var(--caption-size)}

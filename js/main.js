@@ -51,37 +51,22 @@ const SERVICOS_CONHECIDOS = {
 
 // === INICIALIZAÇÃO ===
 document.addEventListener('DOMContentLoaded', () => {
+    carregarCupons();
     setMinDate();
     initOrcamento();
     initAgendamento();
     initMenu();
     initDarkMode();
-    initChatWidget();
     initPWA();
     initCalendario();
-    carregarCupons();
     initAvaliacao();
+    initEscolhaServicos();
+    atualizarOrcamento();
 });
 
 // === MODO ESCURO ===
 function initDarkMode() {
-    const saved = localStorage.getItem('darkMode');
-    if (saved === 'true') {
-        document.body.classList.add('dark-mode');
-        atualizarIconeTema(true);
-    }
-
-    const btn = document.getElementById('darkModeToggle');
-    if (btn) {
-        atualizarRotuloTema(document.body.classList.contains('dark-mode'));
-        btn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
-            atualizarIconeTema(isDark);
-            atualizarRotuloTema(isDark);
-        });
-    }
+    window.interfaceBarbados.initTema();
 }
 
 function atualizarIconeTema(isDark) {
@@ -192,12 +177,15 @@ function atualizarHorariosDisponiveis(data) {
     });
 
     select.innerHTML = '';
+    const grid = document.getElementById('horariosVisuais');
+    grid.replaceChildren();
 
     if (lista.length === 0) {
         const option = document.createElement('option');
         option.value = '';
         option.textContent = 'Fechado neste dia — escolha outra data';
         select.appendChild(option);
+        document.getElementById('slotStatus').textContent = 'Domingo fechado. Escolha outro dia para ver horários.';
         return;
     }
 
@@ -212,6 +200,22 @@ function atualizarHorariosDisponiveis(data) {
         option.textContent = slot.disponivel ? slot.horario : `${slot.horario} (Indisponível)`;
         if (!slot.disponivel) option.disabled = true;
         select.appendChild(option);
+    }
+    const livres = lista.filter(slot => slot.disponivel);
+    document.getElementById('slotStatus').textContent = livres.length
+        ? `${livres.length} horários locais disponíveis. Atalhos abaixo ou use a lista acima.`
+        : 'Nenhum horário local disponível para esta duração. Tente outro dia ou profissional.';
+    for (const slot of livres) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'slot-button';
+        button.textContent = slot.horario;
+        button.setAttribute('aria-pressed', 'false');
+        button.addEventListener('click', () => {
+            select.value = slot.horario;
+            select.dispatchEvent(new Event('change'));
+        });
+        grid.appendChild(button);
     }
 }
 
@@ -251,10 +255,10 @@ function atualizarOrcamento() {
         if (!Number.isFinite(valor)) return;
         subtotal += valor;
         servicos.push(nome);
-        html += `<p>✓ ${seguro.escaparHtml(nome)} <span style="float:right">R$ ${valor.toFixed(2).replace('.', ',')}</span></p>`;
+        html += `<p>${seguro.escaparHtml(nome)} <span>R$ ${valor.toFixed(2).replace('.', ',')}</span></p>`;
     });
 
-    if (checkboxes.length === 0) html = '<p class="vazio">Nenhum serviço selecionado</p>';
+    if (checkboxes.length === 0) html = '<p class="vazio">Selecione um serviço para começar.</p>';
 
     // Desconto por combo
     let desconto = 0;
@@ -318,6 +322,11 @@ function atualizarOrcamento() {
     }
 
     totalEl.innerHTML = `<strong>R$ ${total.toFixed(2).replace('.', ',')}</strong>`;
+    document.getElementById('servicosAgendamento').value = servicos.join(' + ');
+    const cupomStatus = document.getElementById('cupomStatus');
+    cupomStatus.textContent = cupomCodigoCru ? (cupomInvalido ? 'Cupom não aplicado. Confira o código e a validade.' : 'Cupom aplicado à estimativa local.') : 'O desconto aparece aqui, sem cobrança.';
+    cupomStatus.classList.toggle('field-error', cupomInvalido);
+    document.getElementById('cupomInput').setAttribute('aria-invalid', String(cupomInvalido));
 
     localStorage.setItem('orcamentoAtual', JSON.stringify({
         servicos, subtotal, desconto, percentual,
@@ -367,9 +376,10 @@ function initAgendamento() {
 
 async function salvarAgendamento(e) {
     e.preventDefault();
+    window.interfaceBarbados.erroFormulario(e.target, '');
     const botao = e.target.querySelector('[type="submit"]');
     if (botao.disabled) return;
-    botao.disabled = true;
+    window.interfaceBarbados.estadoEnvio(e.target, true, 'Salvando simulação…');
     try {
         // Serializa o check + write entre abas da mesma origem quando Web
         // Locks está disponível. Isso NÃO resolve concorrência entre aparelhos.
@@ -382,13 +392,18 @@ async function salvarAgendamento(e) {
         mostrarNotificacao('Não foi possível salvar neste navegador. Verifique o armazenamento e tente novamente.', '#dc3545');
         console.error('Falha ao salvar simulação local:', erro);
     } finally {
-        botao.disabled = false;
+        window.interfaceBarbados.estadoEnvio(e.target, false);
     }
 }
 
 function salvarAgendamentoLocal(e) {
     e.preventDefault();
     if (!e.target.reportValidity()) return;
+    atualizarOrcamento();
+    if (!document.querySelector('.checkbox-item input:checked')) {
+        mostrarNotificacao('Escolha um serviço no orçamento antes de salvar.', '#dc3545');
+        return;
+    }
 
     const clienteLogado = JSON.parse(sessionStorage.getItem('clienteLogado') || 'null');
     const orcamento = JSON.parse(localStorage.getItem('orcamentoAtual') || 'null');
@@ -469,6 +484,8 @@ function salvarAgendamentoLocal(e) {
     e.target.reset();
     localStorage.removeItem('orcamentoAtual');
     document.getElementById('horarioAgendamento').innerHTML = '<option value="">Selecione primeiro a data</option>';
+    document.getElementById('horariosVisuais').replaceChildren();
+    document.getElementById('slotStatus').textContent = 'Escolha uma data para ver os horários locais.';
     atualizarOrcamento();
 }
 
@@ -503,7 +520,7 @@ function abrirConversaWhatsApp(ag, ganhouBonus) {
 // e-mail e NÃO agenda lembrete. Tudo isso era prometido antes (P0-4).
 function mostrarConfirmacaoCompleta(ag, pontosGanhos) {
     const data = new Date(ag.data + 'T00:00:00').toLocaleDateString('pt-BR');
-    const modal = document.createElement('div');
+    const modal = document.createElement('dialog');
     modal.className = 'modal-overlay active';
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
@@ -511,7 +528,7 @@ function mostrarConfirmacaoCompleta(ag, pontosGanhos) {
     modal.innerHTML = `
         <div class="modal-content">
             <div class="modal-icon" aria-hidden="true">✓</div>
-            <h2 id="tituloConfirmacao">Horário solicitado</h2>
+            <h2 id="tituloConfirmacao">Simulação salva.</h2>
             <div class="modal-info">
                 <p><strong>${seguro.escaparHtml(data)} às ${seguro.escaparHtml(ag.horario)}</strong></p>
                 <p>${seguro.escaparHtml(ag.servicos)}</p>
@@ -527,15 +544,11 @@ function mostrarConfirmacaoCompleta(ag, pontosGanhos) {
                 <p>O pedido foi registrado apenas <strong>neste navegador</strong>. Nenhum e-mail ou lembrete automático foi enviado.</p>
                 <p>Nenhum horário real foi reservado e nenhum contato externo foi aberto.</p>
             </div>
-            <button class="btn btn-primary btn-block" onclick="this.closest('.modal-overlay').remove()">Entendi</button>
+            <button class="btn btn-primary btn-block" data-close-dialog>Concluir</button>
         </div>
     `;
     document.body.appendChild(modal);
-
-    const botao = modal.querySelector('button');
-    if (botao) botao.focus();
-
-    tocarSomSucesso();
+    window.interfaceBarbados.ativarDialogo(modal, document.querySelector('#formAgendamento [type="submit"]'));
 }
 
 function tocarSomSucesso() {
@@ -729,11 +742,13 @@ if ('serviceWorker' in navigator) {
 
 // === NOTIFICAÇÕES ===
 function mostrarNotificacao(mensagem, cor = '#28a745') {
+    if (cor === '#dc3545') {
+        window.interfaceBarbados.erroFormulario(document.getElementById('formAgendamento'), mensagem);
+    }
     const div = document.createElement('div');
     div.className = 'notificacao';
     div.setAttribute('role', 'status');
     div.innerHTML = `<i class="fas fa-check-circle" aria-hidden="true"></i> ${seguro.escaparHtml(mensagem)}`;
-    div.style.background = cor;
     document.body.appendChild(div);
     setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 4000);
 }
@@ -752,3 +767,31 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
+
+// UI enhancement: controls remain native; the tested agenda module stays authoritative.
+function initEscolhaServicos() {
+    document.getElementById('heroEscolha').addEventListener('submit', event => {
+        event.preventDefault();
+        escolherServico(document.getElementById('heroServico').value);
+    });
+    document.querySelectorAll('[data-service]').forEach(button => {
+        button.addEventListener('click', () => escolherServico(button.dataset.service));
+    });
+    document.getElementById('horarioAgendamento').addEventListener('change', event => {
+        document.querySelectorAll('.slot-button').forEach(button => {
+            button.setAttribute('aria-pressed', String(button.textContent === event.target.value));
+        });
+    });
+    window.addEventListener('storage', event => {
+        if (event.key === 'agendamentos') atualizarHorariosDisponiveis(document.getElementById('dataAgendamento').value);
+    });
+}
+
+function escolherServico(nome) {
+    const selected = [...document.querySelectorAll('.checkbox-item input')].find(input => input.dataset.nome === nome);
+    if (!selected) return;
+    selected.checked = true;
+    selected.dispatchEvent(new Event('change'));
+    document.getElementById('orcamento').scrollIntoView({ behavior: 'smooth' });
+    selected.focus({ preventScroll: true });
+}

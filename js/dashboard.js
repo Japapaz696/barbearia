@@ -42,7 +42,7 @@ function carregarDashboard(cliente) {
 
     // Próximo brinde
     if (progresso === 0 && (clienteAtual.visitas || 0) > 0) {
-        document.querySelector('.progress-text').innerHTML = '🎉 <strong>Você ganhou um corte grátis! Fale com o barbeiro!</strong>';
+        document.querySelector('.progress-text').textContent = 'Meta demonstrativa alcançada. Nenhum serviço real foi resgatado.';
     }
 }
 
@@ -58,10 +58,10 @@ function carregarAgendamentos(cliente) {
     if (meusAgendamentos.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
-                <i class="far fa-calendar" style="font-size:48px; color:var(--primary); margin-bottom:15px; display:block;"></i>
-                Nenhum agendamento encontrado
-                <br><br>
-                <a href="../index.html#agendamento" class="btn btn-primary">Agendar Agora</a>
+                <i class="far fa-calendar" aria-hidden="true"></i>
+                <h3>Seu próximo cuidado começa aqui.</h3>
+                <p>Você ainda não tem simulações neste navegador. Escolha um serviço para experimentar.</p>
+                <a href="../index.html#orcamento" class="btn btn-secondary">Simular horário</a>
             </div>
         `;
         return;
@@ -102,13 +102,13 @@ function carregarHistorico(cliente) {
     const container = document.getElementById('historicoVisitas');
 
     if (historico.length === 0) {
-        container.innerHTML = '<p class="empty-state">Nenhuma visita registrada ainda</p>';
+        container.innerHTML = '<div class="empty-state"><i class="fas fa-history" aria-hidden="true"></i><h3>Sua história está começando.</h3><p>Atendimentos marcados como concluídos na demo aparecerão aqui.</p></div>';
         return;
     }
 
     container.innerHTML = historico.map(h => {
         const data = new Date(h.data + 'T00:00:00').toLocaleDateString('pt-BR');
-        const avaliado = h.avaliado ? '<span style="color:#ffc107;">⭐ Avaliado</span>' : '<span style="color:var(--gray);">Não avaliado</span>';
+        const avaliado = h.avaliado ? '<span class="review-label">Avaliado na demo</span>' : '<span>Não avaliado</span>';
         return `
             <div class="visita-item">
                 <div class="visita-info">
@@ -116,7 +116,7 @@ function carregarHistorico(cliente) {
                     <p><i class="far fa-calendar"></i> ${data} às ${escapar(h.horario)} · ${avaliado}</p>
                     <p><i class="fas fa-user"></i> ${escapar(h.barbeiro || 'Barbeiro')}</p>
                 </div>
-                <span style="color:var(--primary); font-weight:bold;">+10 pts</span>
+                <span class="visit-points">+10 pts</span>
             </div>
         `;
     }).join('');
@@ -139,11 +139,22 @@ if (formAtualizar) {
 
         const clientes = JSON.parse(localStorage.getItem('clientesConta') || '[]');
         const idx = clientes.findIndex(c => c.id === cliente.id);
+        const nome = document.getElementById('editNome').value.trim();
+        const telefone = document.getElementById('editTelefone').value.replace(/\D/g, '');
+        const email = document.getElementById('editEmail').value.trim().toLowerCase();
+        if (!nome || !/^\d{10,11}$/.test(telefone) || !formAtualizar.reportValidity()) {
+            window.interfaceBarbados.erroFormulario(formAtualizar, 'Informe nome, e-mail e telefone de teste com DDD (10 ou 11 dígitos).');
+            return;
+        }
+        if (clientes.some(c => c.id !== cliente.id && (c.telefone === telefone || c.email?.toLowerCase() === email))) {
+            window.interfaceBarbados.erroFormulario(formAtualizar, 'Este telefone ou e-mail já pertence a outra conta local.');
+            return;
+        }
 
         if (idx >= 0) {
-            clientes[idx].nome = document.getElementById('editNome').value;
-            clientes[idx].telefone = document.getElementById('editTelefone').value;
-            clientes[idx].email = document.getElementById('editEmail').value;
+            clientes[idx].nome = nome;
+            clientes[idx].telefone = telefone;
+            clientes[idx].email = email;
 
             localStorage.setItem('clientesConta', JSON.stringify(clientes));
 
@@ -151,7 +162,8 @@ if (formAtualizar) {
             const { senha: _, ...clienteSeguro } = clientes[idx];
             sessionStorage.setItem('clienteLogado', JSON.stringify(clienteSeguro));
 
-            mostrarNotificacao('Dados atualizados com sucesso!');
+            window.interfaceBarbados.erroFormulario(formAtualizar, '');
+            mostrarNotificacao('Dados atualizados neste navegador.');
             carregarDashboard(clientes[idx]);
         }
     });
@@ -242,13 +254,19 @@ function verificarLembretes(cliente) {
 
 // === AVALIAÇÃO (função global) ===
 window.abrirAvaliacao = function(agendamentoId) {
-    const nota = prompt('Avalie nosso serviço de 1 a 5 estrelas:');
-    if (!nota || nota < 1 || nota > 5) {
-        if (nota) mostrarNotificacao('Nota deve ser entre 1 e 5!', '#dc3545');
-        return;
-    }
+    const cliente = JSON.parse(sessionStorage.getItem('clienteLogado') || 'null');
+    const agendamento = JSON.parse(localStorage.getItem('agendamentos') || '[]').find(a => a.id === agendamentoId);
+    if (!cliente || !agendamento || agendamento.status !== 'concluido' || agendamento.avaliado ||
+        !(agendamento.clienteId === cliente.id || agendamento.telefone === cliente.telefone)) return;
+    window.interfaceBarbados.formularioDialogo('Avaliar a experiência da demo', [
+        { name: 'nota', label: 'Sua nota de teste', required: true, value: '5', options: [5, 4, 3, 2, 1].map(n => ({ value: String(n), label: `${n} de 5 estrelas` })) },
+        { name: 'comentario', label: 'Comentário de teste (opcional)', type: 'textarea', maxLength: 500 }
+    ], values => salvarAvaliacaoLocal(agendamentoId, Number(values.nota), values.comentario));
+};
 
-    const comentario = prompt('Deixe um comentário (opcional):') || '';
+function salvarAvaliacaoLocal(agendamentoId, nota, comentario) {
+    const atual = JSON.parse(localStorage.getItem('agendamentos') || '[]').find(a => a.id === agendamentoId);
+    if (!atual || atual.avaliado) return 'Este registro já foi avaliado nesta demo.';
 
     const avaliacoes = JSON.parse(localStorage.getItem('avaliacoes') || '[]');
     const cliente = JSON.parse(sessionStorage.getItem('clienteLogado') || 'null');
@@ -297,7 +315,7 @@ window.abrirAvaliacao = function(agendamentoId) {
     mostrarNotificacao('Obrigado pela avaliação! +5 pontos ⭐', '#ffc107');
     carregarAgendamentos(JSON.parse(sessionStorage.getItem('clienteLogado') || 'null'));
     carregarHistorico(JSON.parse(sessionStorage.getItem('clienteLogado') || 'null'));
-};
+}
 
 // === NOTIFICAÇÃO ===
 function mostrarNotificacao(mensagem, cor = '#28a745') {
@@ -305,7 +323,6 @@ function mostrarNotificacao(mensagem, cor = '#28a745') {
     div.className = 'notificacao';
     div.setAttribute('role', 'status');
     div.textContent = mensagem;
-    div.style.background = cor;
     document.body.appendChild(div);
     setTimeout(() => { div.style.opacity = '0'; setTimeout(() => div.remove(), 300); }, 4000);
 }

@@ -1,82 +1,34 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Crie sua conta na Barbado's Barbearia e ganhe pontos de boas-vindas.">
-    <meta name="theme-color" content="#1a1a1a">
-    <meta name="robots" content="noindex">
-    <title>Cadastro - Barbado's Barbearia</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%231a1a1a'/%3E%3Ctext x='50' y='68' text-anchor='middle' font-size='58'%3E%F0%9F%92%88%3C/text%3E%3C/svg%3E">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/cliente.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex"><meta name="theme-color" content="#171819">
+    <meta name="description" content="Crie uma conta local para experimentar a demonstração da Barbado's Barbearia.">
+    <title>Criar conta de teste | Barbado's Barbearia</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/cliente.css"><link rel="stylesheet" href="../assets/vendor/fontawesome/css/used.css">
+    <script src="../js/interface.js"></script>
 </head>
 <body class="auth-body">
-    <main class="auth-container">
-        <div class="auth-box auth-box-large">
-            <div class="auth-header">
-                <h1><i class="fas fa-scissors" aria-hidden="true"></i> BARBADO'S</h1>
-                <p>Crie sua conta e ganhe pontos!</p>
-            </div>
-            <div class="promo-banner">
-                <i class="fas fa-gift" aria-hidden="true"></i>
-                <strong>+20 pontos</strong> de boas-vindas. Use <strong>BEMVINDO10</strong> no orçamento para simular 10% de desconto.
-            </div>
-            <div class="demo-note" role="note">
-                <i class="fas fa-flask" aria-hidden="true"></i>
-                <span>Área de demonstração: a conta e os pontos ficam salvos apenas neste navegador.</span>
-            </div>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <header class="auth-topbar"><a class="logo" href="../index.html">BARBADO'S<span>BARBEARIA</span></a><div><a class="text-link" href="../index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao site</a><button id="darkModeToggle" class="icon-button" type="button" aria-label="Alternar tema"><i class="fas fa-sun" aria-hidden="true"></i></button></div></header>
+    <main class="auth-layout signup-layout" id="conteudo">
+        <aside class="auth-story"><div><h2>O próximo cuidado<br>começa aqui.</h2><p>Experimente a jornada completa. Escolha, simule e acompanhe na sua conta local.</p></div><figure><img src="../assets/images/barbershop.webp" alt="Foto ilustrativa de banco: ambiente de uma barbearia" width="800" height="534"><figcaption>Imagem ilustrativa · Unsplash</figcaption></figure><div class="welcome-points"><i class="far fa-star" aria-hidden="true"></i><p><strong>20 pontos demonstrativos</strong><span>Para explorar a fidelidade da demo, sem valor comercial.</span></p></div></aside>
+        <section class="auth-box" aria-labelledby="signupTitle">
+            <div class="auth-header"><h1 id="signupTitle">Seu espaço<br>na Barbado's.</h1><p>Crie uma conta de teste. Campos com * são obrigatórios.</p></div>
+            <div class="demo-note" role="note"><i class="fas fa-info-circle" aria-hidden="true"></i><span>Use dados fictícios e senha exclusiva de teste. Conta salva só neste navegador, sem autenticação de produção.</span></div>
             <form id="formCadastro" class="auth-form" novalidate>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="nomeCadastro"><i class="fas fa-user" aria-hidden="true"></i> Nome completo</label>
-                        <input type="text" id="nomeCadastro" name="nome" autocomplete="name" required placeholder="Seu nome">
-                    </div>
-                    <div class="form-group">
-                        <label for="telefoneCadastro"><i class="fas fa-phone" aria-hidden="true"></i> Telefone</label>
-                        <input type="tel" id="telefoneCadastro" name="telefone" autocomplete="tel" required placeholder="(31) 99999-9999">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="emailCadastro"><i class="fas fa-envelope" aria-hidden="true"></i> E-mail</label>
-                    <input type="email" id="emailCadastro" name="email" autocomplete="email" required placeholder="seu@email.com">
-                </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="senhaCadastro"><i class="fas fa-lock" aria-hidden="true"></i> Senha</label>
-                        <input type="password" id="senhaCadastro" name="senha" autocomplete="new-password" required placeholder="Mínimo 8 caracteres" minlength="8">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmaSenha"><i class="fas fa-lock" aria-hidden="true"></i> Confirmar senha</label>
-                        <input type="password" id="confirmaSenha" name="confirmaSenha" autocomplete="new-password" required placeholder="Repita a senha" minlength="8">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="nascimentoCadastro"><i class="fas fa-calendar" aria-hidden="true"></i> Data de nascimento (opcional)</label>
-                    <input type="date" id="nascimentoCadastro" name="nascimento" autocomplete="bday">
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" id="aceitaPrivacidade" required>
-                    <label for="aceitaPrivacidade">Li e aceito a <a href="../politica-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</label>
-                </div>
-                <div class="form-check">
-                    <input type="checkbox" id="aceitaTermos">
-                    <label for="aceitaTermos">Quero receber promoções e novidades (opcional).</label>
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">
-                    <i class="fas fa-user-plus" aria-hidden="true"></i> Criar Conta
-                </button>
-                <p class="auth-link">Já tem conta? <a href="login.html">Faça login</a></p>
+                <div class="form-row"><div class="form-group"><label for="nomeCadastro">Nome completo *</label><input type="text" id="nomeCadastro" name="nome" autocomplete="name" required placeholder="Nome fictício" maxlength="100"></div><div class="form-group"><label for="telefoneCadastro">Telefone com DDD *</label><input type="tel" id="telefoneCadastro" name="telefone" autocomplete="tel" required placeholder="DDD + número fictício" maxlength="20"></div></div>
+                <div class="form-group"><label for="emailCadastro">E-mail *</label><input type="email" id="emailCadastro" name="email" autocomplete="email" required placeholder="teste@example.invalid" maxlength="160"></div>
+                <div class="form-row"><div class="form-group"><label for="senhaCadastro">Senha de teste *</label><div class="password-field"><input type="password" id="senhaCadastro" name="senha" autocomplete="new-password" required placeholder="Pelo menos 8 caracteres" minlength="8" aria-describedby="passwordHint"><button class="password-toggle" type="button" data-password-target="senhaCadastro" aria-label="Mostrar senha" aria-pressed="false"><i class="far fa-eye" aria-hidden="true"></i></button></div></div><div class="form-group"><label for="confirmaSenha">Confirmar senha *</label><input type="password" id="confirmaSenha" name="confirmaSenha" autocomplete="new-password" required placeholder="Repita a senha" minlength="8"></div></div>
+                <p class="field-hint" id="passwordHint">Não reutilize uma senha de outros serviços.</p>
+                <div class="form-group"><label for="nascimentoCadastro">Data de nascimento <span>(opcional)</span></label><input type="date" id="nascimentoCadastro" name="nascimento" autocomplete="bday"></div>
+                <div class="consent-group"><div class="form-check"><input type="checkbox" id="aceitaPrivacidade" required><label for="aceitaPrivacidade">Li e aceito a <a href="../politica-privacidade.html" target="_blank" rel="noopener">Política de Privacidade</a>.</label></div><div class="form-check"><input type="checkbox" id="aceitaTermos"><label for="aceitaTermos">Quero receber promoções e novidades (opcional).</label></div><p class="field-hint">Preferência local. A demo não envia campanhas.</p></div>
+                <div class="form-error" data-form-error role="alert" tabindex="-1" hidden></div>
+                <button type="submit" class="btn btn-primary btn-block">Criar conta de teste <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
+                <p class="auth-link">Já tem uma conta neste navegador? <a href="login.html">Entrar</a></p>
             </form>
-            <div class="auth-back">
-                <a href="../index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao site</a>
-            </div>
-        </div>
+        </section>
     </main>
-    <div id="notificacoes" aria-live="polite"></div>
-    <script src="../js/seguranca.js"></script>
-    <script src="../js/senha.js"></script>
-    <script src="../js/cliente.js"></script>
+    <script src="../js/seguranca.js"></script><script src="../js/senha.js"></script><script src="../js/cliente.js"></script>
 </body>
 </html>

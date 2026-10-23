@@ -9,7 +9,7 @@
 //
 // Agora o SW monta as URLs com `new URL(caminho, self.registration.scope)`.
 
-const VERSAO = 'v10';
+const VERSAO = 'p1-v2';
 const CACHE_NAME = `barbados-${VERSAO}`;
 const PREFIXO_CACHE = `barbados:${self.registration.scope}:`;
 const STATIC_CACHE = `${PREFIXO_CACHE}static-${VERSAO}`;
@@ -22,6 +22,7 @@ const STATIC_ASSETS = [
     './css/cliente.css',
     './css/admin.css',
     './js/seguranca.js',
+    './js/interface.js',
     './js/agenda.js',
     './js/main.js',
     './js/cliente.js',
@@ -33,7 +34,18 @@ const STATIC_ASSETS = [
     './cliente/cadastro.html',
     './cliente/dashboard.html',
     './admin/index.html',
-    './politica-privacidade.html'
+    './politica-privacidade.html',
+    './assets/favicon.svg',
+    './assets/fonts/barlow-condensed-latin-700.woff2',
+    './assets/fonts/manrope-latin-variable.woff2',
+    './assets/images/barber-800.webp',
+    './assets/images/barber-480.webp',
+    './assets/images/barber-detail.webp',
+    './assets/images/barbershop.webp',
+    './assets/vendor/fontawesome/css/used.css',
+    './assets/vendor/fontawesome/webfonts/fa-solid-900.woff2',
+    './assets/vendor/fontawesome/webfonts/fa-regular-400.woff2',
+    './assets/vendor/fontawesome/webfonts/fa-brands-400.woff2'
 ];
 
 // Resolve um caminho relativo para URL absoluta dentro do escopo.

@@ -1,336 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Admin - Barbado's Barbearia</title>
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/admin.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="robots" content="noindex"><meta name="theme-color" content="#171819">
+    <meta name="description" content="Painel administrativo demonstrativo da Barbado's. Sem autenticação real, apenas dados locais.">
+    <title>Painel demonstrativo | Barbado's Barbearia</title>
+    <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="../css/style.css"><link rel="stylesheet" href="../css/admin.css"><link rel="stylesheet" href="../assets/vendor/fontawesome/css/used.css">
+    <script src="../js/interface.js"></script>
 </head>
-<body>
-    <button id="sidebarToggle" class="sidebar-toggle" aria-label="Alternar menu administrativo"><i class="fas fa-bars" aria-hidden="true"></i></button>
-
+<body class="admin-body">
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+    <button id="sidebarToggle" class="sidebar-toggle icon-button" type="button" aria-label="Abrir menu administrativo" aria-controls="sidebar" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+    <div class="sidebar-scrim" id="sidebarScrim" hidden></div>
     <aside class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-            <h2><i class="fas fa-scissors"></i> BARBADO'S</h2>
-            <p>Painel Admin</p>
-        </div>
-        <nav class="sidebar-nav">
-            <a href="#" class="nav-link active" data-tab="dashboard">
-                <i class="fas fa-chart-line"></i> <span>Dashboard</span>
-                <span class="badge" id="badgeNovos">0</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="agendamentos">
-                <i class="fas fa-calendar"></i> <span>Agendamentos</span>
-                <span class="badge" id="badgePendentes">0</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="clientes">
-                <i class="fas fa-users"></i> <span>Clientes</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="servicos">
-                <i class="fas fa-cut"></i> <span>Serviços</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="cupons">
-                <i class="fas fa-ticket-alt"></i> <span>Cupons</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="avaliacoes">
-                <i class="fas fa-star"></i> <span>Avaliações</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="financeiro">
-                <i class="fas fa-dollar-sign"></i> <span>Financeiro</span>
-            </a>
-            <a href="#" class="nav-link" data-tab="configuracoes">
-                <i class="fas fa-cog"></i> <span>Configurações</span>
-            </a>
-            <a href="../index.html" class="nav-link">
-                <i class="fas fa-arrow-left"></i> <span>Voltar ao Site</span>
-            </a>
+        <div class="sidebar-header"><a class="logo" href="../index.html">BARBADO'S<span>BARBEARIA</span></a><p>Gestão demonstrativa</p></div>
+        <nav class="sidebar-nav" aria-label="Seções do painel">
+            <a href="#dashboard" class="nav-link active" data-tab="dashboard" aria-current="page"><i class="fas fa-chart-line" aria-hidden="true"></i><span>Visão geral</span><span class="badge" id="badgeNovos">0</span></a>
+            <a href="#agendamentos" class="nav-link" data-tab="agendamentos"><i class="far fa-calendar" aria-hidden="true"></i><span>Agendamentos</span><span class="badge" id="badgePendentes">0</span></a>
+            <a href="#clientes" class="nav-link" data-tab="clientes"><i class="fas fa-users" aria-hidden="true"></i><span>Clientes</span></a>
+            <a href="#servicos" class="nav-link" data-tab="servicos"><i class="fas fa-cut" aria-hidden="true"></i><span>Serviços</span></a>
+            <a href="#cupons" class="nav-link" data-tab="cupons"><i class="fas fa-ticket-alt" aria-hidden="true"></i><span>Cupons</span></a>
+            <a href="#avaliacoes" class="nav-link" data-tab="avaliacoes"><i class="far fa-star" aria-hidden="true"></i><span>Avaliações</span></a>
+            <a href="#financeiro" class="nav-link" data-tab="financeiro"><i class="fas fa-wallet" aria-hidden="true"></i><span>Financeiro</span></a>
+            <a href="#configuracoes" class="nav-link" data-tab="configuracoes"><i class="fas fa-sliders-h" aria-hidden="true"></i><span>Configurações</span></a>
         </nav>
+        <div class="sidebar-footer"><span class="local-tag"><i class="fas fa-laptop" aria-hidden="true"></i> Armazenamento local</span><a href="../index.html"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao site</a></div>
     </aside>
+    <main class="main-content" id="conteudo">
+        <header class="top-bar"><div class="top-bar-left"><h1 id="pageTitle" tabindex="-1">Visão geral</h1><p id="lastUpdate">Carregando registros locais…</p></div><div class="top-bar-right"><button id="darkModeToggle" class="icon-button" type="button" aria-label="Alternar tema"><i class="fas fa-sun" aria-hidden="true"></i></button><button id="btnRefresh" class="btn-icon icon-button" title="Atualizar dados locais" type="button"><i class="fas fa-sync-alt" aria-hidden="true"></i></button><button class="notificacao-admin icon-button" id="notificacaoAdmin" type="button" aria-label="Notificações locais" aria-expanded="false" aria-controls="notifDropdown"><i class="far fa-bell" aria-hidden="true"></i><span class="notif-badge" id="notifBadge">0</span></button></div></header>
+        <aside class="demo-admin-warning" role="note"><i class="fas fa-info-circle" aria-hidden="true"></i><p><strong>Painel de demonstração, sem autenticação.</strong> Dados somente deste navegador, sem sincronização entre aparelhos. Não insira dados reais de clientes.</p></aside>
+        <div class="notif-dropdown hidden" id="notifDropdown"><h2>Notificações locais</h2><div id="listaNotificacoes"><p class="empty-state">Nenhuma notificação neste navegador.</p></div><button class="btn-link" type="button" onclick="limparNotificacoes()">Limpar notificações</button></div>
 
-    <main class="main-content">
-        <header class="top-bar">
-            <div class="top-bar-left">
-                <h1 id="pageTitle">Dashboard</h1>
-                <small id="lastUpdate" style="color:#999; font-size:12px;"></small>
-            </div>
-            <div class="top-bar-right">
-                <button id="btnRefresh" class="btn-icon" title="Atualizar">
-                    <i class="fas fa-sync-alt"></i>
-                </button>
-                <div class="notificacao-admin" id="notificacaoAdmin">
-                    <i class="fas fa-bell"></i>
-                    <span class="notif-badge" id="notifBadge">0</span>
-                </div>
-                <div class="user-info">
-                    <span><i class="fas fa-user-circle"></i> Administrador</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- Notificações Dropdown -->
-        <div class="notif-dropdown hidden" id="notifDropdown">
-            <h4>Notificações deste navegador</h4>
-            <div id="listaNotificacoes"></div>
-            <button class="btn-link" onclick="limparNotificacoes()">Limpar tudo</button>
-        </div>
-
-        <!-- DASHBOARD -->
-        <section id="dashboard" class="tab-content active">
+        <section id="dashboard" class="tab-content active" aria-label="Visão geral">
             <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#d4edda; color:#28a745;">
-                        <i class="fas fa-calendar-check"></i>
-                    </div>
-                    <div>
-                        <h3 id="metricAgendamentos">0</h3>
-                        <p>Agendamentos Hoje</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#fff3cd; color:#f39c12;">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <div>
-                        <h3 id="metricClientes">0</h3>
-                        <p>Total de Clientes</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#d1ecf1; color:#17a2b8;">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </div>
-                    <div>
-                        <h3 id="metricFaturamento">R$ 0</h3>
-                        <p>Faturamento do Mês</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#f8d7da; color:#dc3545;">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div>
-                        <h3 id="metricAvaliacao">4.9</h3>
-                        <p>Avaliação Média</p>
-                    </div>
-                </div>
+                <div class="metric-card"><div class="metric-icon"><i class="far fa-calendar-check" aria-hidden="true"></i></div><div><h2 id="metricAgendamentos">0</h2><p>Simulações hoje</p></div></div>
+                <div class="metric-card"><div class="metric-icon"><i class="fas fa-users" aria-hidden="true"></i></div><div><h2 id="metricClientes">0</h2><p>Contas locais</p></div></div>
+                <div class="metric-card"><div class="metric-icon"><i class="fas fa-wallet" aria-hidden="true"></i></div><div><h2 id="metricFaturamento">R$ 0</h2><p>Valor concluído no mês</p></div></div>
+                <div class="metric-card"><div class="metric-icon"><i class="far fa-star" aria-hidden="true"></i></div><div><h2 id="metricAvaliacao">—</h2><p>Média das avaliações locais</p></div></div>
             </div>
-
-            <div class="dashboard-row">
-                <div class="card">
-                    <h3><i class="fas fa-clock"></i> Próximos Agendamentos</h3>
-                    <div id="proximosAgendamentos"></div>
-                </div>
-                <div class="card">
-                    <h3><i class="fas fa-fire"></i> Clientes VIP</h3>
-                    <div id="clientesVIP"></div>
-                </div>
-            </div>
-
-            <div class="dashboard-row">
-                <div class="card">
-                    <h3><i class="fas fa-chart-bar"></i> Serviços Mais Pedidos</h3>
-                    <div id="topServicos"></div>
-                </div>
-                <div class="card">
-                    <h3><i class="fas fa-calendar-day"></i> Agenda da Semana</h3>
-                    <div id="agendaSemana"></div>
-                </div>
-            </div>
+            <div class="dashboard-row"><section class="card"><div class="card-header"><h2>Próximos agendamentos</h2><a href="#agendamentos" class="text-link" onclick="showTab('agendamentos'); return false">Ver todos</a></div><div id="proximosAgendamentos"></div></section><section class="card"><h2>Agenda da semana</h2><div id="agendaSemana"></div></section></div>
+            <div class="dashboard-row"><section class="card"><h2>Serviços mais pedidos</h2><div id="topServicos"></div></section><section class="card"><h2>Clientes com mais pontos</h2><div id="clientesVIP"></div></section></div>
+            <p class="admin-footnote">Indicadores da demonstração local. Não representam reservas, faturamento recebido ou avaliações comerciais verificadas.</p>
         </section>
 
-        <!-- AGENDAMENTOS -->
-        <section id="agendamentos" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Todos os Agendamentos</h3>
-                    <div class="filter-buttons">
-                        <button class="filter-btn active" data-filter="todos">Todos</button>
-                        <button class="filter-btn" data-filter="confirmado">Registros locais</button>
-                        <button class="filter-btn" data-filter="concluido">Concluídos</button>
-                        <button class="filter-btn" data-filter="cancelado">Cancelados</button>
-                    </div>
-                </div>
-                <div id="listaAgendamentosAdmin"></div>
-            </div>
-        </section>
-
-        <!-- CLIENTES -->
-        <section id="clientes" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Base de Clientes</h3>
-                    <input type="search" id="buscaCliente" aria-label="Buscar cliente" placeholder="🔍 Buscar cliente..." class="search-input">
-                </div>
-                <div id="listaClientes"></div>
-            </div>
-        </section>
-
-        <!-- SERVIÇOS -->
-        <section id="servicos" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Gerenciar Serviços</h3>
-                    <button class="btn btn-primary" onclick="novoServico()">+ Novo Serviço</button>
-                </div>
-                <div id="listaServicos"></div>
-            </div>
-        </section>
-
-        <!-- CUPONS -->
-        <section id="cupons" class="tab-content">
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="fas fa-ticket-alt"></i> Cupons de Desconto</h3>
-                    <button class="btn btn-primary" onclick="novoCupom()">+ Novo Cupom</button>
-                </div>
-                <div id="listaCupons"></div>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-chart-pie"></i> Uso de Cupons</h3>
-                <div id="estatisticasCupons"></div>
-            </div>
-        </section>
-
-        <!-- AVALIAÇÕES -->
-        <section id="avaliacoes" class="tab-content">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#d4edda; color:#28a745;">
-                        <i class="fas fa-smile"></i>
-                    </div>
-                    <div>
-                        <h3 id="totalAvaliacoes">0</h3>
-                        <p>Total de Avaliações</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#fff3cd; color:#f39c12;">
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <div>
-                        <h3 id="notaMedia">0.0</h3>
-                        <p>Nota Média</p>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <h3><i class="fas fa-comments"></i> Últimas Avaliações</h3>
-                <div id="listaAvaliacoes"></div>
-            </div>
-        </section>
-
-        <!-- FINANCEIRO -->
-        <section id="financeiro" class="tab-content">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#d4edda; color:#28a745;">
-                        <i class="fas fa-arrow-up"></i>
-                    </div>
-                    <div>
-                        <h3 id="receitaMes">R$ 0</h3>
-                        <p>Receitas</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#f8d7da; color:#dc3545;">
-                        <i class="fas fa-arrow-down"></i>
-                    </div>
-                    <div>
-                        <h3>R$ 800</h3>
-                        <p>Despesas</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#d1ecf1; color:#17a2b8;">
-                        <i class="fas fa-wallet"></i>
-                    </div>
-                    <div>
-                        <h3 id="lucroMes">R$ 0</h3>
-                        <p>Lucro Líquido</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon" style="background:#d1ecf1; color:#17a2b8;">
-                        <i class="fas fa-percentage"></i>
-                    </div>
-                    <div>
-                        <h3 id="taxaOcupacao">0%</h3>
-                        <p>Taxa de Ocupação</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>Histórico de Receitas</h3>
-                <div id="historicoFinanceiro"></div>
-            </div>
-
-            <div class="card">
-                <h3>Exportar Relatório</h3>
-                <button class="btn btn-primary" onclick="exportarRelatorio()">
-                    <i class="fas fa-download"></i> Baixar CSV
-                </button>
-            </div>
-        </section>
-
-        <!-- CONFIGURAÇÕES -->
-        <section id="configuracoes" class="tab-content">
-            <div class="card">
-                <h3><i class="fas fa-store"></i> Informações da Barbearia</h3>
-                <form id="formConfig" class="form-grid">
-                    <div class="form-group">
-                        <label for="configNome">Nome do Estabelecimento</label>
-                        <input type="text" id="configNome" value="Barbado's Barbearia">
-                    </div>
-                    <div class="form-group">
-                        <label for="configWhatsapp">WhatsApp</label>
-                        <input type="text" id="configWhatsapp" value="553125160233">
-                    </div>
-                    <div class="form-group">
-                        <label for="configEmail">E-mail</label>
-                        <input type="email" id="configEmail" value="contato@barbadosbarbearia.com">
-                    </div>
-                    <div class="form-group">
-                        <label for="configEndereco">Endereço</label>
-                        <input type="text" id="configEndereco" value="Rua Sena Madureira, 516 - Belo Horizonte, MG">
-                    </div>
-                    <div class="form-group">
-                        <label for="configAbre">Abertura (hora)</label>
-                        <input type="number" id="configAbre" value="9">
-                    </div>
-                    <div class="form-group">
-                        <label for="configFecha">Fechamento Seg-Sex (hora)</label>
-                        <input type="number" id="configFecha" value="20">
-                    </div>
-                    <div class="form-group">
-                        <label for="configSabado">Sábado fecha às</label>
-                        <input type="number" id="configSabado" value="18">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Salvar Configurações</button>
-                </form>
-            </div>
-
-            <div class="card">
-                <h3><i class="fas fa-database"></i> Backup de Dados</h3>
-                <p>Faça backup ou restaure os dados do sistema.</p>
-                <button class="btn btn-primary" onclick="backupDados()">
-                    <i class="fas fa-download"></i> Fazer Backup
-                </button>
-                <button class="btn btn-secondary" onclick="document.getElementById('fileRestore').click()">
-                    <i class="fas fa-upload"></i> Restaurar Backup
-                </button>
-                <input type="file" id="fileRestore" accept=".json" style="display:none" onchange="restaurarDados(event)">
-                <button class="btn btn-danger" onclick="limparTudo()">
-                    <i class="fas fa-trash"></i> Limpar Todos os Dados
-                </button>
-            </div>
-        </section>
+        <section id="agendamentos" class="tab-content" aria-label="Agendamentos"><div class="card"><div class="card-header"><h2>Registros de agendamento</h2><a class="btn btn-primary" href="../index.html#orcamento">Nova simulação <i class="fas fa-plus" aria-hidden="true"></i></a></div><div class="filter-buttons" aria-label="Filtrar agendamentos"><button class="filter-btn active" type="button" data-filter="todos" aria-pressed="true">Todos</button><button class="filter-btn" type="button" data-filter="confirmado" aria-pressed="false">Registros locais</button><button class="filter-btn" type="button" data-filter="concluido" aria-pressed="false">Concluídos</button><button class="filter-btn" type="button" data-filter="cancelado" aria-pressed="false">Cancelados</button></div><div id="listaAgendamentosAdmin" aria-live="polite"></div></div></section>
+        <section id="clientes" class="tab-content" aria-label="Clientes"><div class="card"><div class="card-header"><h2>Contas deste navegador</h2><div class="admin-search"><label for="buscaCliente" class="field-hint">Buscar por nome ou telefone</label><input type="search" id="buscaCliente" placeholder="Buscar cliente" class="search-input"></div></div><div id="listaClientes" aria-live="polite"></div></div></section>
+        <section id="servicos" class="tab-content" aria-label="Serviços"><div class="card"><div class="card-header"><h2>Catálogo do painel</h2><button class="btn btn-primary" type="button" onclick="novoServico()">Novo serviço <i class="fas fa-plus" aria-hidden="true"></i></button></div><p class="section-note">Edição local demonstrativa. Estes registros ainda não alteram o catálogo fixo da página pública.</p><div id="listaServicos"></div></div></section>
+        <section id="cupons" class="tab-content" aria-label="Cupons"><div class="card"><div class="card-header"><h2>Cupons de demonstração</h2><button class="btn btn-primary" type="button" onclick="novoCupom()">Novo cupom <i class="fas fa-plus" aria-hidden="true"></i></button></div><p class="section-note">Regras locais para explorar o orçamento. Sem valor comercial; a contagem de uso não é integrada.</p><div id="listaCupons"></div></div><div class="card"><h2>Resumo dos cupons locais</h2><div id="estatisticasCupons"></div></div></section>
+        <section id="avaliacoes" class="tab-content" aria-label="Avaliações"><div class="metrics-grid metrics-compact"><div class="metric-card"><div class="metric-icon"><i class="far fa-comment" aria-hidden="true"></i></div><div><h2 id="totalAvaliacoes">0</h2><p>Avaliações locais</p></div></div><div class="metric-card"><div class="metric-icon"><i class="far fa-star" aria-hidden="true"></i></div><div><h2 id="notaMedia">—</h2><p>Média demonstrativa</p></div></div></div><div class="card"><h2>Experiências na demo</h2><p class="section-note">Comentários de teste salvos neste navegador, não avaliações verificadas de clientes reais.</p><div id="listaAvaliacoes"></div></div></section>
+        <section id="financeiro" class="tab-content" aria-label="Financeiro"><div class="demo-note"><i class="fas fa-info-circle" aria-hidden="true"></i><span>Exemplo de relatório, sem integração financeira. Usa valores de registros concluídos e uma despesa fictícia fixa de R$ 800. Ocupação é uma estimativa simplificada.</span></div><div class="metrics-grid"><div class="metric-card"><div><h2 id="receitaMes">R$ 0</h2><p>Total concluído na demo</p></div></div><div class="metric-card"><div><h2>R$ 800</h2><p>Despesa fictícia</p></div></div><div class="metric-card"><div><h2 id="lucroMes">R$ 0</h2><p>Saldo ilustrativo</p></div></div><div class="metric-card"><div><h2 id="taxaOcupacao">0%</h2><p>Ocupação estimada</p></div></div></div><div class="card"><div class="card-header"><h2>Histórico demonstrativo</h2><button class="btn btn-secondary" type="button" onclick="exportarRelatorio()"><i class="fas fa-download" aria-hidden="true"></i> Baixar CSV</button></div><div id="historicoFinanceiro"></div></div></section>
+        <section id="configuracoes" class="tab-content" aria-label="Configurações"><div class="card"><h2>Informações da demonstração</h2><p class="section-note">Preferências salvas no painel local. Não alteram automaticamente os dados e horários fixos do site público.</p><form id="formConfig" class="form-grid"><div class="form-group"><label for="configNome">Nome do estabelecimento</label><input type="text" id="configNome" value="Barbado's Barbearia" required></div><div class="form-group"><label for="configWhatsapp">WhatsApp</label><input type="text" id="configWhatsapp" value="553125160233"></div><div class="form-group"><label for="configEmail">E-mail</label><input type="email" id="configEmail" value="contato@barbadosbarbearia.com"></div><div class="form-group"><label for="configEndereco">Endereço</label><input type="text" id="configEndereco" value="Rua Sena Madureira, 516 - Belo Horizonte, MG"></div><div class="form-group"><label for="configAbre">Abertura (hora)</label><input type="number" id="configAbre" value="9" min="0" max="23"></div><div class="form-group"><label for="configFecha">Fechamento seg a sex (hora)</label><input type="number" id="configFecha" value="20" min="1" max="24"></div><div class="form-group"><label for="configSabado">Fechamento sábado (hora)</label><input type="number" id="configSabado" value="18" min="1" max="24"></div><div class="full-width"><button type="submit" class="btn btn-primary">Salvar preferências locais</button></div></form></div><div class="card"><h2>Dados deste navegador</h2><p class="section-note">Exporte ou restaure somente arquivos de teste confiáveis. Apagar dados é irreversível neste aparelho.</p><div class="data-actions"><button class="btn btn-secondary" type="button" onclick="backupDados()"><i class="fas fa-download" aria-hidden="true"></i> Fazer backup</button><button class="btn btn-secondary" type="button" onclick="document.getElementById('fileRestore').click()"><i class="fas fa-upload" aria-hidden="true"></i> Restaurar backup</button><input type="file" id="fileRestore" accept=".json" hidden onchange="restaurarDados(event)" aria-label="Arquivo JSON de backup"><button class="btn btn-danger" type="button" onclick="limparTudo()">Apagar dados locais</button></div></div></section>
     </main>
-
-    <aside class="demo-admin-warning" role="note">Painel de demonstração sem autenticação. Dados locais deste navegador, sem sincronização entre aparelhos. Não insira dados reais de clientes.</aside>
-    <script src="../js/seguranca.js"></script>
-    <script src="../js/admin.js"></script>
+    <script src="../js/seguranca.js"></script><script src="../js/admin.js"></script>
 </body>
 </html>
